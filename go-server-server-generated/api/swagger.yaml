@@ -1,0 +1,348 @@
+openapi: 3.0.1
+info:
+  title: BERT Faq Classification Dashboard Backend
+  description: This swagger describes the API signature of the backend of the dashboard.
+  contact:
+    email: nicola.massarenti@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://TODO/api
+- url: http://TODO/api
+tags:
+- name: Knowledge base
+  description: The information about the KB and the faqs.
+- name: Training
+  description: The information about the training of the model.
+paths:
+  /training:
+    get:
+      tags:
+      - Training
+      summary: Get the status of the model.
+      description: Returns the status of the model.
+      operationId: training
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/training'
+  /faq:
+    get:
+      tags:
+      - Knowledge base
+      summary: Get all the knowledge base.
+      description: Returns all the KB of the model.
+      operationId: getKB
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/kb'
+  /faq/{id}:
+    get:
+      tags:
+      - Knowledge base
+      summary: Get all the data about a specific FAQ
+      description: Returns all the data about a specific FAQ.
+      operationId: getFAQ
+      parameters:
+      - name: id
+        in: path
+        description: ID of the desired FAQ.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/faq'
+        "400":
+          description: Invalid ID supplied
+          content: {}
+        "404":
+          description: Id not found
+          content: {}
+    put:
+      tags:
+      - Knowledge base
+      summary: Changes the training status of a FAQ
+      description: Changes the training status of a FAQ
+      operationId: trainFAQ
+      parameters:
+      - name: id
+        in: path
+        description: ID of the FAQ.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: toTrain
+        in: query
+        description: The training status of the faq
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "400":
+          description: Invalid ID supplied
+          content: {}
+        "404":
+          description: Id not found
+          content: {}
+    post:
+      tags:
+      - Knowledge base
+      summary: Update or create a FAQ
+      description: Updates or create a FAQ.
+      operationId: putFAQ
+      parameters:
+      - name: id
+        in: path
+        description: ID of the desired FAQ.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: The FAQ
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/faq'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/faq'
+        "400":
+          description: Invalid ID supplied
+          content: {}
+        "404":
+          description: Id not found
+          content: {}
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Knowledge base
+      summary: Delete a FAQ.
+      description: Deletes a FAQ.
+      operationId: deleteFAQ
+      parameters:
+      - name: id
+        in: path
+        description: ID of the FAQ to delete.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "400":
+          description: Invalid ID supplied
+          content: {}
+        "404":
+          description: Id not found
+          content: {}
+components:
+  schemas:
+    kb:
+      type: object
+      properties:
+        kb:
+          type: array
+          example:
+          - id: "00001"
+            mainQuestion: Come cambio password?
+            trained: true
+          - id: "00002"
+            mainQuestion: Come imposto la lingua della pagina?
+            trained: true
+          - id: "00003"
+            mainQuestion: Qual è il numero verde?
+            trained: false
+          items:
+            $ref: '#/components/schemas/kb_kb'
+      example:
+        kb:
+        - id: "00001"
+          mainQuestion: Come cambio password?
+          trained: true
+        - id: "00002"
+          mainQuestion: Come imposto la lingua della pagina?
+          trained: true
+        - id: "00003"
+          mainQuestion: Qual è il numero verde?
+          trained: false
+    faq:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1234"
+        mainQuestion:
+          type: string
+          example: Is this the main question?
+        trained:
+          type: boolean
+          example: true
+        examples:
+          $ref: '#/components/schemas/faq_examples'
+      example:
+        mainQuestion: Is this the main question?
+        trained: true
+        examples:
+          de:
+          - Wie ändere ich das Passwort?
+          - Ich möchte das Passwort ändern
+          en:
+          - How do I change the password?
+          - I want to change the password
+          it:
+          - Come cambio la password?
+          - Voglio cambiare la password
+          fr:
+          - Comment changer le mot de passe?
+          - Je veux changer le mot de passe
+          nl:
+          - Hoe wijzig ik het wachtwoord?
+          - Ik wil het wachtwoord wijzigen
+        id: "1234"
+    training:
+      type: object
+      properties:
+        isOngoingTraining:
+          type: boolean
+        logs:
+          type: array
+          example:
+          - id: 1
+            date: 1590184239753
+            active: 10
+            inactive: 23
+          - id: 2
+            date: 1590184239753
+            active: 10
+            inactive: 23
+          items:
+            $ref: '#/components/schemas/training_logs'
+      example:
+        isOngoingTraining: true
+        logs:
+        - id: 1
+          date: 1590184239753
+          active: 10
+          inactive: 23
+        - id: 2
+          date: 1590184239753
+          active: 10
+          inactive: 23
+    kb_kb:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1234"
+        mainQuestion:
+          type: string
+          example: Is this the main question?
+        trained:
+          type: boolean
+          example: true
+    faq_examples:
+      type: object
+      properties:
+        it:
+          type: array
+          example:
+          - Come cambio la password?
+          - Voglio cambiare la password
+          items:
+            type: string
+        en:
+          type: array
+          example:
+          - How do I change the password?
+          - I want to change the password
+          items:
+            type: string
+        fr:
+          type: array
+          example:
+          - Comment changer le mot de passe?
+          - Je veux changer le mot de passe
+          items:
+            type: string
+        de:
+          type: array
+          example:
+          - Wie ändere ich das Passwort?
+          - Ich möchte das Passwort ändern
+          items:
+            type: string
+        nl:
+          type: array
+          example:
+          - Hoe wijzig ik het wachtwoord?
+          - Ik wil het wachtwoord wijzigen
+          items:
+            type: string
+      example:
+        de:
+        - Wie ändere ich das Passwort?
+        - Ich möchte das Passwort ändern
+        en:
+        - How do I change the password?
+        - I want to change the password
+        it:
+        - Come cambio la password?
+        - Voglio cambiare la password
+        fr:
+        - Comment changer le mot de passe?
+        - Je veux changer le mot de passe
+        nl:
+        - Hoe wijzig ik het wachtwoord?
+        - Ik wil het wachtwoord wijzigen
+    training_logs:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "10"
+        date:
+          type: string
+          example: "12345678"
+        active:
+          type: integer
+          example: 12
+        inactive:
+          type: integer
+          example: 1

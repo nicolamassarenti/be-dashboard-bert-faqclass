@@ -1,0 +1,236 @@
+swagger: "2.0"
+info:
+  description: "This swagger describes the API signature of the backend of the dashboard."
+  version: "1.0.0"
+  title: "BERT Faq Classification Dashboard Backend"
+  termsOfService: ""
+  contact:
+    email: "nicola.massarenti@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "TODO"
+basePath: "/api"
+tags:
+- name: "Knowledge base"
+  description: "The information about the KB and the faqs."
+- name: "Training"
+  description: "The information about the training of the model."
+schemes:
+- "https"
+- "http"
+paths:
+  /training:
+    get:
+      tags:
+      - "Training"
+      summary: "Get the status of the model."
+      description: "Returns the status of the model."
+      operationId: "training"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/training"
+      
+  /faq:
+    get:
+      tags:
+      - "Knowledge base"
+      summary: "Get all the knowledge base."
+      description: "Returns all the KB of the model."
+      operationId: "getKB"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/kb"
+  /faq/{id}:
+    get:
+      tags:
+      - "Knowledge base"
+      summary: "Get all the data about a specific FAQ"
+      description: "Returns all the data about a specific FAQ."
+      operationId: "getFAQ"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the desired FAQ."
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/faq"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Id not found"
+    post:
+      tags:
+      - "Knowledge base"
+      summary: "Update or create a FAQ"
+      description: "Updates or create a FAQ."
+      operationId: "putFAQ"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the desired FAQ."
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "body"
+        in: "body"
+        description: "The FAQ"
+        required: true
+        schema: 
+          $ref: "#/definitions/faq"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/faq"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Id not found"
+    delete:
+      tags:
+      - "Knowledge base"
+      summary: "Delete a FAQ."
+      description: "Deletes a FAQ."
+      operationId: "deleteFAQ"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the FAQ to delete."
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Id not found"
+    put:
+      tags:
+      - "Knowledge base"
+      summary: "Changes the training status of a FAQ"
+      description: "Changes the training status of a FAQ"
+      operationId: "trainFAQ"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the FAQ."
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "toTrain"
+        in: "query"
+        description: "The training status of the faq"
+        type: "boolean"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Id not found"
+      
+      
+definitions:
+  kb:
+    type: "object"
+    properties:
+      kb:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              example: "1234"
+            mainQuestion:
+              type: "string"
+              example: "Is this the main question?"
+            trained:
+              type: "boolean"
+              example: true
+        example: [{"id":"00001","mainQuestion":"Come cambio password?","trained":true},{"id":"00002","mainQuestion":"Come imposto la lingua della pagina?","trained":true},{"id":"00003","mainQuestion":"Qual è il numero verde?","trained":false}]
+  faq:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "1234"
+      mainQuestion:
+        type: "string"
+        example: "Is this the main question?"
+      trained:
+        type: "boolean"
+        example: true
+      examples:
+        type: "object"
+        properties:
+          it:
+            type: "array"
+            items:
+              type: "string"
+            example: ["Come cambio la password?", "Voglio cambiare la password"]
+          en:
+            type: "array"
+            items:
+              type: "string"
+            example: ["How do I change the password?", "I want to change the password"]
+          fr:
+            type: "array"
+            items:
+              type: "string"
+            example: ["Comment changer le mot de passe?", "Je veux changer le mot de passe"]
+          de:
+            type: "array"
+            items:
+              type: "string"
+            example: ["Wie ändere ich das Passwort?", "Ich möchte das Passwort ändern"]
+          nl:
+            type: "array"
+            items:
+              type: "string"
+            example: ["Hoe wijzig ik het wachtwoord?", "Ik wil het wachtwoord wijzigen"]
+  training:
+    type: "object"
+    properties:
+      isOngoingTraining:
+        type: "boolean"
+      logs:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              example: "10"
+            date:
+              type: "string"
+              example: "12345678"
+            active:
+              type: "integer"
+              example: 12
+            inactive:
+              type: "integer"
+              example: 1
+        example: [{"id":1,"date":1590184239753,"active":10,"inactive":23},{"id":2,"date":1590184239753,"active":10,"inactive":23}]
+        
