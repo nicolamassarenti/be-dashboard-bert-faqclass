@@ -23,7 +23,7 @@ func faqToDomainLayer(faq Faq) domain.Faq {
 
 	answers := make([]domain.Answer, len(faq.Answers))
 	for i, ans := range faq.Answers {
-		answers[i] = domain.Answer{ans.lang, ans.answer}
+		answers[i] = domain.Answer{ans.Lang, ans.Answer}
 	}
 
 	trainingExamples := make([]domain.TrainingExample, len(faq.TrainingExamples))

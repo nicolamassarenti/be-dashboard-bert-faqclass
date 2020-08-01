@@ -4,7 +4,7 @@ package domain
 type FaqRepository interface {
 	KnowledgeBase() ([]Faq, error)
 	Faq(ID string) (Faq, error)
-	ChangeTrainingStatus(ID string) error
+	ChangeTrainingStatus(ID string, newStatus bool) error
 	AddFaq(Faq) error
 	DeleteFaq(ID string) error
 }
