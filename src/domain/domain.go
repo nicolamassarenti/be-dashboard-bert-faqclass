@@ -29,18 +29,3 @@ type Answer struct {
 	Lang   string
 	Answer string
 }
-
-// Answer returns the answer in a specific language and an "ok" boolean that is false if doesn't exists a language
-func (faq *Faq) Answer(lang string) (response string, ok bool) {
-	for _, answer := range faq.Answers {
-		if answer.Lang == lang {
-			return answer.Answer, true
-		}
-	}
-	return "", false
-}
-
-// ChangeTrainingFaq changes the training status of a Faq
-func (faq *Faq) ChangeTrainingFaq() {
-	faq.IsTrained = !faq.IsTrained
-}
