@@ -5,14 +5,21 @@ import (
 
 	"net/http"
 
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/interfaces"
+	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/infrastructure"
+	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/interfaces"
+	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 const (
-	PORT = 8080
+	port     = "8080"
+	authPath = "./auth/bert-faqclass-a96dec925432.json"
 )
 
 func main() {
+
+	dbHandler := infrastructure.NewFirestoreHandler(authPath)
+	kbInteractor := new(usecases.KnowledgeBaseInteractor)
+	kbInteractor.FaqRepository = interfaces.NewFaqDBHandler(dbHandler, "Faq")
 
 	webserviceHandler := interfaces.WebserviceHandler{}
 
@@ -34,5 +41,5 @@ func main() {
 		Methods(http.MethodDelete)
 
 	http.Handle("/", rtr)
-	http.ListenAndServe(PORT, nil)
+	http.ListenAndServe(port, nil)
 }

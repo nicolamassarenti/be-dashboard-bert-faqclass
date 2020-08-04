@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
+	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
 	"google.golang.org/api/iterator"
 )
 
@@ -36,10 +36,10 @@ func NewFirestoreHandler(authPath string) *FirestoreHandler {
 }
 
 // GetAll returns all the documents of a collection
-func (handler *FirestoreHandler) GetAll() ([]usecases.Faq, error) {
+func (handler *FirestoreHandler) GetAll() ([]domain.Faq, error) {
 	iter := handler.Client.Collection("Faq").Documents(handler.Context)
 
-	var faqs []usecases.Faq
+	var faqs []domain.Faq
 
 	for {
 		doc, err := iter.Next()
@@ -49,7 +49,7 @@ func (handler *FirestoreHandler) GetAll() ([]usecases.Faq, error) {
 		if err != nil {
 			return nil, err
 		}
-		var faq usecases.Faq
+		var faq domain.Faq
 
 		err = doc.DataTo(&faq)
 		if err != nil {
@@ -63,21 +63,21 @@ func (handler *FirestoreHandler) GetAll() ([]usecases.Faq, error) {
 }
 
 // Get returns a specific faq
-func (handler *FirestoreHandler) Get(ID string) (usecases.Faq, error) {
+func (handler *FirestoreHandler) Get(ID string) (domain.Faq, error) {
 
 	iter := handler.Client.Collection("Faq").Where("ID", "==", ID).Documents(handler.Context)
 	defer iter.Stop()
 
-	var faq usecases.Faq
+	var faq domain.Faq
 
 	doc, err := iter.Next()
 	if err != nil {
-		return usecases.Faq{}, err
+		return domain.Faq{}, err
 	}
 
 	err = doc.DataTo(&faq)
 	if err != nil {
-		return usecases.Faq{}, err
+		return domain.Faq{}, err
 	}
 
 	return faq, nil
@@ -98,7 +98,7 @@ func (handler *FirestoreHandler) ChangeBool(ID, path string, value bool) error {
 }
 
 // Store adds a new faq
-func (handler *FirestoreHandler) Store(faq *usecases.Faq) error {
+func (handler *FirestoreHandler) Store(faq *domain.Faq) error {
 
 	_, _, err := handler.Client.Collection("Faq").Add(handler.Context, faq)
 
