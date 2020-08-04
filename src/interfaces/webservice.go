@@ -19,6 +19,11 @@ type KnowledgeBaseInteractor interface {
 }
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
+type KB struct {
+	KB []Faq `json:"kb,omitempty"`
+}
+
+// Faq contains the data that define a F.A.Q, in the format required by the UI
 type Faq struct {
 	ID           string              `json:"id,omitempty"`
 	MainQuestion string              `json:"mainQuestion,omitempty"`
@@ -69,17 +74,26 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received request to " + req.URL.Path)
 
-	kb, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
+	faqsUseCase, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	handler.Logger.Info("Transforming the data from usecase Faq to Webservice Faq")
+	var faqs []Faq
+	for _, faq := range faqsUseCase {
+		faqs = append(faqs, usecaseFaqToWebserviceFaq(faq))
+	}
+	kb := KB{faqs}
+	handler.Logger.Info("Data correctly transformed")
 
 	var body []byte
 	if body, err = json.Marshal(kb); err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	res.Header().Add("Content-Type", "application/json")
 
 	res.WriteHeader(200)
