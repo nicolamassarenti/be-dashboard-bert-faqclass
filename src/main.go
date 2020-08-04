@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -12,25 +14,35 @@ import (
 	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
-const (
-	port     = "8080"
-	authPath = "./auth/bert-faqclass-a96dec925432.json"
-)
-
 func main() {
+	// Loading ENV variables
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Printf("Error loading .env file")
 		return
 	}
 
-	dbHandler := infrastructure.NewFirestoreHandler(authPath)
+	port := os.Getenv("PORT")
+	projectID := os.Getenv("PROJECT_ID")
+
+	// Handlers, interfaces and implementation
+	dbHandler := infrastructure.NewFirestoreHandler(projectID)
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
 	kbInteractor.FaqRepository = interfaces.NewFaqDBHandler(dbHandler, "Faq")
 
-	webserviceHandler := interfaces.WebserviceHandler{}
+	logger := infrastructure.NewLogger()
+	kbInteractor.Logger = logger
 
+	webserviceHandler := interfaces.WebserviceHandler{}
+	webserviceHandler.KnowledgeBaseInteractor = kbInteractor
+	webserviceHandler.Logger = logger
+
+	logger.Info("Handlers created")
+
+	// Routes
 	rtr := mux.NewRouter()
+	rtr.HandleFunc("/alive", webserviceHandler.Alive)
+
 	rtr.HandleFunc("/faq", webserviceHandler.KnowledgeBase).
 		Methods(http.MethodGet)
 
@@ -48,5 +60,11 @@ func main() {
 		Methods(http.MethodDelete)
 
 	http.Handle("/", rtr)
-	http.ListenAndServe(port, nil)
+
+	logger.Info("Router and handler function created")
+
+	// Server
+	logger.Info("Server starting at port " + port)
+	log.Fatal(http.ListenAndServe(port, nil))
+
 }
