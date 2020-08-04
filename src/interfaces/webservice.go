@@ -18,9 +18,16 @@ type KnowledgeBaseInteractor interface {
 	DeleteFaq(ID string) error
 }
 
-// Faq contains the data that define a F.A.Q, in the format required by the UI
+// KB is the struct that contains the preview of all the KB
 type KB struct {
-	KB []Faq `json:"kb,omitempty"`
+	KB []FaqPreview `json:"kb,omitempty"`
+}
+
+// FaqPreview contains the preview of a faq
+type FaqPreview struct {
+	ID           string `json:"id,omitempty"`
+	MainQuestion string `json:"mainQuestion,omitempty"`
+	Trained      bool   `json:"trained,omitempty"`
 }
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
@@ -80,10 +87,10 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 		return
 	}
 
-	handler.Logger.Info("Transforming the data from usecase Faq to Webservice Faq")
-	var faqs []Faq
+	handler.Logger.Info("Transforming the data from usecase Faq to Webservice FaqPreview")
+	var faqs []FaqPreview
 	for _, faq := range faqsUseCase {
-		faqs = append(faqs, usecaseFaqToWebserviceFaq(faq))
+		faqs = append(faqs, FaqPreview{faq.ID, faq.MainExample, faq.IsTrained})
 	}
 	kb := KB{faqs}
 	handler.Logger.Info("Data correctly transformed")
