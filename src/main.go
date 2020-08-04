@@ -1,9 +1,11 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-
+	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 
 	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/infrastructure"
 	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/interfaces"
@@ -16,6 +18,11 @@ const (
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Printf("Error loading .env file")
+		return
+	}
 
 	dbHandler := infrastructure.NewFirestoreHandler(authPath)
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
