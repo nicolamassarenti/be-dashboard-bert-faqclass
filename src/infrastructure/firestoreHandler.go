@@ -3,7 +3,6 @@ package infrastructure
 import (
 	"context"
 	"log"
-	"os"
 
 	"cloud.google.com/go/firestore"
 	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
@@ -17,10 +16,9 @@ type FirestoreHandler struct {
 }
 
 // NewFirestoreHandler creates a new firestore handler, with a client
-func NewFirestoreHandler(authPath string) *FirestoreHandler {
+func NewFirestoreHandler(projectID string) *FirestoreHandler {
 	// Get a Firestore client.
 	ctx := context.Background()
-	projectID := os.Getenv("PROJECT_ID")
 
 	client, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
