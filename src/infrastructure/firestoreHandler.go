@@ -25,7 +25,7 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	defer client.Close()
+	// defer client.Close()
 
 	firestoreHandler := new(FirestoreHandler)
 	firestoreHandler.Client = client

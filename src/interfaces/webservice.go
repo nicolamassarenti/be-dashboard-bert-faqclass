@@ -48,7 +48,7 @@ type WebserviceHandler struct {
 
 // Alive returns 200 OK
 func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to /alive")
+	handler.Logger.Info("Received request to " + req.URL.Path)
 
 	body, err := json.Marshal("I am alive")
 	if err != nil {
@@ -61,11 +61,14 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 	res.Write(body)
 
 	handler.Logger.Debug("Response set-up, returning the request")
+	handler.Logger.Info("Returning response")
 	return
 }
 
 // KnowledgeBase is the handler function that returns the kb
 func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to " + req.URL.Path)
+
 	kb, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -81,11 +84,14 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 
 	res.WriteHeader(200)
 	res.Write(body)
+	handler.Logger.Info("Returning response")
 	return
 }
 
 // Faq is the handler function that returns a Faq
 func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to " + req.URL.Path)
+
 	// Retrieving the ID from the url
 	var id string
 	id = mux.Vars(req)["id"]
@@ -110,11 +116,14 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 
 	res.WriteHeader(200)
 	res.Write(body)
+	handler.Logger.Info("Returning response")
 	return
 }
 
 // ChangeTrainingStatus is the handler function that returns a Faq
 func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to " + req.URL.Path)
+
 	// Retrieving the ID from the url
 	var id string
 	var toTrain bool
@@ -139,11 +148,13 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 
 	// Preparing the response
 	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
 	return
 }
 
 // AddFaq is the handler function that adds a new Faq
 func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
@@ -178,11 +189,13 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 
 	// Preparing the response
 	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
 	return
 }
 
 // DeleteFaq is the handler function that adds a new Faq
 func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
@@ -200,5 +213,6 @@ func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Re
 
 	// Preparing the response
 	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
 	return
 }

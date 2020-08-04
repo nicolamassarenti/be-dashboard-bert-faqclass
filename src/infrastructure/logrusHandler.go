@@ -18,8 +18,6 @@ func NewLogger() Logger {
 	}
 
 	logger.logger.Out = os.Stdout
-	logger.logger.SetReportCaller(true)
-	logger.logger.SetFormatter(&logrus.JSONFormatter{})
 
 	return logger
 }

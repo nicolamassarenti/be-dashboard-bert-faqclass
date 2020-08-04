@@ -22,7 +22,7 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 		answers[i] = usecases.Answer{ans.lang, ans.answer}
 	}
 
-	trainingExamples := make([]usecases.TrainingExample, len(faq.Examples))
+	var trainingExamples []usecases.TrainingExample
 	for k, v := range faq.Examples {
 		trainingExamples = append(trainingExamples, usecases.TrainingExample{k, v})
 	}

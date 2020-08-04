@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
@@ -28,7 +29,7 @@ func main() {
 	// Handlers, interfaces and implementation
 	dbHandler := infrastructure.NewFirestoreHandler(projectID)
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
-	kbInteractor.FaqRepository = interfaces.NewFaqDBHandler(dbHandler, "Faq")
+	kbInteractor.FaqRepository = interfaces.NewFaqDBHandler(dbHandler, "KnowledgeBase")
 
 	logger := infrastructure.NewLogger()
 	kbInteractor.Logger = logger
@@ -43,20 +44,20 @@ func main() {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/alive", webserviceHandler.Alive)
 
-	rtr.HandleFunc("/faq", webserviceHandler.KnowledgeBase).
+	rtr.HandleFunc("/api/faq", webserviceHandler.KnowledgeBase).
 		Methods(http.MethodGet)
 
-	rtr.HandleFunc("/faq/{id}", webserviceHandler.Faq).
+	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.Faq).
 		Methods(http.MethodGet)
 
-	rtr.HandleFunc("/faq/{id}", webserviceHandler.ChangeTrainingStatus).
+	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.ChangeTrainingStatus).
 		Methods(http.MethodPut).
 		Queries("toTrain")
 
-	rtr.HandleFunc("/faq/{id}", webserviceHandler.AddFaq).
+	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.AddFaq).
 		Methods(http.MethodPost)
 
-	rtr.HandleFunc("/faq/{id}", webserviceHandler.DeleteFaq).
+	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.DeleteFaq).
 		Methods(http.MethodDelete)
 
 	http.Handle("/", rtr)
@@ -65,6 +66,6 @@ func main() {
 
 	// Server
 	logger.Info("Server starting at port " + port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS()(rtr)))
 
 }
