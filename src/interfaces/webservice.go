@@ -43,6 +43,25 @@ type faqOverview struct {
 // WebserviceHandler it's the handler for REST api
 type WebserviceHandler struct {
 	KnowledgeBaseInteractor KnowledgeBaseInteractor
+	Logger                  usecases.Logger
+}
+
+// Alive returns 200 OK
+func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to /alive")
+
+	body, err := json.Marshal("I am alive")
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	res.Header().Add("Content-Type", "application/json")
+
+	res.WriteHeader(200)
+	res.Write(body)
+
+	handler.Logger.Debug("Response set-up, returning the request")
+	return
 }
 
 // KnowledgeBase is the handler function that returns the kb
