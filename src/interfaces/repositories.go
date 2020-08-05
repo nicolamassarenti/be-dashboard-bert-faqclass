@@ -6,11 +6,11 @@ import (
 
 // FaqDBHandler is the interface for the handler of the DB for the FAQ
 type FaqDBHandler interface {
-	Store(faq *domain.Faq) error
-	Get(ID string) (domain.Faq, error)
-	GetAll() ([]domain.Faq, error)
-	ChangeBool(ID, path string, value bool) error
-	Delete(ID string) error
+	Store(collection string, faq *domain.Faq) error
+	Get(collection string, ID string) (domain.Faq, error)
+	GetAll(collection string) ([]domain.Faq, error)
+	ChangeBool(collection string, ID, path string, value bool) error
+	Delete(collection string, ID string) error
 }
 
 // FaqDBRepo is the object for the faq db handler
@@ -34,29 +34,29 @@ func NewFaqDBHandler(dbHandler FaqDBHandler, collection string) *KBHandler {
 // KnowledgeBase is the implementation that returns all the faq of the knowledge base
 func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
 
-	return repo.Handler.GetAll()
+	return repo.Handler.GetAll(repo.collection)
 }
 
 // Faq is the implementation that returns a specific ID
 func (repo *KBHandler) Faq(ID string) (faq domain.Faq, err error) {
 
-	return repo.Handler.Get(ID)
+	return repo.Handler.Get(repo.collection, ID)
 }
 
 // ChangeTrainingStatus changes the "isTrained" bool of a Faq
 func (repo *KBHandler) ChangeTrainingStatus(ID string, newStatus bool) error {
 	path := "isTrained"
-	return repo.Handler.ChangeBool(ID, path, newStatus)
+	return repo.Handler.ChangeBool(repo.collection, ID, path, newStatus)
 }
 
 // AddFaq adds a new faq
 func (repo *KBHandler) AddFaq(faq domain.Faq) error {
 
-	return repo.Handler.Store(&faq)
+	return repo.Handler.Store(repo.collection, &faq)
 
 }
 
 // DeleteFaq deletes a faq
 func (repo *KBHandler) DeleteFaq(ID string) error {
-	return repo.Handler.Delete(ID)
+	return repo.Handler.Delete(repo.collection, ID)
 }

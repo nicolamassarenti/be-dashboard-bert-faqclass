@@ -35,8 +35,8 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 }
 
 // GetAll returns all the documents of a collection
-func (handler *FirestoreHandler) GetAll() ([]domain.Faq, error) {
-	iter := handler.Client.Collection("Faq").Documents(handler.Context)
+func (handler *FirestoreHandler) GetAll(collection string) ([]domain.Faq, error) {
+	iter := handler.Client.Collection(collection).Documents(handler.Context)
 
 	var faqs []domain.Faq
 
@@ -62,9 +62,9 @@ func (handler *FirestoreHandler) GetAll() ([]domain.Faq, error) {
 }
 
 // Get returns a specific faq
-func (handler *FirestoreHandler) Get(ID string) (domain.Faq, error) {
+func (handler *FirestoreHandler) Get(collection string, ID string) (domain.Faq, error) {
 
-	iter := handler.Client.Collection("Faq").Where("ID", "==", ID).Documents(handler.Context)
+	iter := handler.Client.Collection(collection).Where("ID", "==", ID).Documents(handler.Context)
 	defer iter.Stop()
 
 	var faq domain.Faq
@@ -83,8 +83,8 @@ func (handler *FirestoreHandler) Get(ID string) (domain.Faq, error) {
 }
 
 // ChangeBool changes the bool value of a document
-func (handler *FirestoreHandler) ChangeBool(ID, path string, value bool) error {
-	iter := handler.Client.Collection("Faq").Where("ID", "==", ID).Documents(handler.Context)
+func (handler *FirestoreHandler) ChangeBool(collection string, ID, path string, value bool) error {
+	iter := handler.Client.Collection(collection).Where("ID", "==", ID).Documents(handler.Context)
 	defer iter.Stop()
 
 	doc := handler.Client.Doc(ID)
@@ -97,16 +97,16 @@ func (handler *FirestoreHandler) ChangeBool(ID, path string, value bool) error {
 }
 
 // Store adds a new faq
-func (handler *FirestoreHandler) Store(faq *domain.Faq) error {
+func (handler *FirestoreHandler) Store(collection string, faq *domain.Faq) error {
 
-	_, _, err := handler.Client.Collection("Faq").Add(handler.Context, faq)
+	_, _, err := handler.Client.Collection(collection).Add(handler.Context, faq)
 
 	return err
 }
 
 // Delete deletes an Faq
-func (handler *FirestoreHandler) Delete(ID string) error {
-	_, err := handler.Client.Doc(ID).Delete(handler.Context)
+func (handler *FirestoreHandler) Delete(collection string, ID string) error {
+	_, err := handler.Client.Collection(collection).Doc(ID).Delete(handler.Context)
 
 	return err
 }
