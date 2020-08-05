@@ -31,11 +31,16 @@ func main() {
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
 	kbInteractor.FaqRepository = interfaces.NewFaqDBHandler(dbHandler, "KnowledgeBase")
 
+	langInteractor := new(usecases.LanguageInteractor)
+	langInteractor.LanguageRepository = interfaces.NewLanguagesDBHandler(dbHandler, "Languages")
+
 	logger := infrastructure.NewLogger()
 	kbInteractor.Logger = logger
+	langInteractor.Logger = logger
 
 	webserviceHandler := interfaces.WebserviceHandler{}
 	webserviceHandler.KnowledgeBaseInteractor = kbInteractor
+	webserviceHandler.LanguagesInteractor = langInteractor
 	webserviceHandler.Logger = logger
 
 	logger.Info("Handlers created")
@@ -43,6 +48,9 @@ func main() {
 	// Routes
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/alive", webserviceHandler.Alive)
+
+	rtr.HandleFunc("/api/lang", webserviceHandler.GetAllLanguages).
+		Methods(http.MethodGet)
 
 	rtr.HandleFunc("/api/faq", webserviceHandler.KnowledgeBase).
 		Methods(http.MethodGet)

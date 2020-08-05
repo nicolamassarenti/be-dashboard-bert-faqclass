@@ -6,6 +6,12 @@ import (
 	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
 )
 
+// Language defines the language
+type Language struct {
+	IsoName     string
+	DisplayName string
+}
+
 // Faq contains the data that define a F.A.Q.
 type Faq struct {
 	ID               string
@@ -35,10 +41,34 @@ type Logger interface {
 	Fatal(message string)
 }
 
-//KnowledgeBaseInteractor is the object that manages the interactions
+// LanguageRepository is the interface for the language repository
+type LanguageRepository interface {
+	GetAllLanguages() ([]Language, error)
+}
+
+//LanguageInteractor is the object that manages the interactions with the languages collection
+type LanguageInteractor struct {
+	LanguageRepository LanguageRepository
+	Logger             Logger
+}
+
+//KnowledgeBaseInteractor is the object that manages the interactions with the KB collection
 type KnowledgeBaseInteractor struct {
 	FaqRepository domain.FaqRepository
 	Logger        Logger
+}
+
+// GetAllLanguages returns all the languages
+func (langInteractor *LanguageInteractor) GetAllLanguages() (langs []Language, err error) {
+	langInteractor.Logger.Info("Retrieving the languages")
+
+	langs, err = langInteractor.LanguageRepository.GetAllLanguages()
+	if err != nil {
+		message := "Error retrieving the languages - %s"
+		err = fmt.Errorf(message, err.Error())
+		langInteractor.Logger.Error(err.Error())
+	}
+	return
 }
 
 // KnowledgeBase returns all the knowledge base, all the faqs

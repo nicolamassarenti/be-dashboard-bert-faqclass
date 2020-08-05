@@ -1,29 +1,62 @@
 package interfaces
 
 import (
+	"github.com/mitchellh/mapstructure"
+
 	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
+	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
-// FaqDBHandler is the interface for the handler of the DB for the FAQ
-type FaqDBHandler interface {
-	Store(collection string, faq *domain.Faq) error
-	Get(collection string, ID string) (domain.Faq, error)
-	GetAll(collection string) ([]domain.Faq, error)
+// DBHandler is the interface for the handler of the DB for the FAQ
+type DBHandler interface {
+	Store(collection string, faq *map[string]interface{}) error
+	Get(collection string, ID string) (map[string]interface{}, error)
+	GetAll(collection string) ([]map[string]interface{}, error)
 	ChangeBool(collection string, ID, path string, value bool) error
 	Delete(collection string, ID string) error
 }
 
+// LanguageDBRepo is the object for the languages db handler
+type LanguageDBRepo struct {
+	Handler    DBHandler
+	collection string
+}
+
 // FaqDBRepo is the object for the faq db handler
 type FaqDBRepo struct {
-	Handler    FaqDBHandler
+	Handler    DBHandler
 	collection string
 }
 
 // KBHandler is the handler for the FAQ
 type KBHandler FaqDBRepo
 
+// LanguagesHandler is the handler for tha languages
+type LanguagesHandler LanguageDBRepo
+
+// NewLanguagesDBHandler creates a new handler for the languages
+func NewLanguagesDBHandler(dbHandler DBHandler, collection string) *LanguagesHandler {
+
+	languagesHandler := new(LanguagesHandler)
+	languagesHandler.Handler = dbHandler
+	languagesHandler.collection = collection
+	return languagesHandler
+}
+
+// GetAllLanguages returns all the languages
+func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
+	var langs []usecases.Language
+	langsMap, err := repo.Handler.GetAll(repo.collection)
+	if err != nil {
+		return langs, err
+	}
+
+	mapstructure.Decode(langsMap, &langs)
+	return langs, err
+}
+
 // NewFaqDBHandler creates a new handler for the faq
-func NewFaqDBHandler(dbHandler FaqDBHandler, collection string) *KBHandler {
+func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
 
 	kbHandler := new(KBHandler)
 	kbHandler.Handler = dbHandler
@@ -33,14 +66,26 @@ func NewFaqDBHandler(dbHandler FaqDBHandler, collection string) *KBHandler {
 
 // KnowledgeBase is the implementation that returns all the faq of the knowledge base
 func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
+	var kb []domain.Faq
+	faqs, err := repo.Handler.GetAll(repo.collection)
+	if err != nil {
+		return kb, err
+	}
 
-	return repo.Handler.GetAll(repo.collection)
+	mapstructure.Decode(faqs, &kb)
+	return kb, err
 }
 
 // Faq is the implementation that returns a specific ID
 func (repo *KBHandler) Faq(ID string) (faq domain.Faq, err error) {
 
-	return repo.Handler.Get(repo.collection, ID)
+	faqMap, err := repo.Handler.Get(repo.collection, ID)
+	if err != nil {
+		return
+	}
+
+	mapstructure.Decode(faqMap, &faq)
+	return
 }
 
 // ChangeTrainingStatus changes the "isTrained" bool of a Faq
@@ -51,8 +96,9 @@ func (repo *KBHandler) ChangeTrainingStatus(ID string, newStatus bool) error {
 
 // AddFaq adds a new faq
 func (repo *KBHandler) AddFaq(faq domain.Faq) error {
-
-	return repo.Handler.Store(repo.collection, &faq)
+	var faqMap map[string]interface{}
+	faqMap = structToMap(faq)
+	return repo.Handler.Store(repo.collection, &faqMap)
 
 }
 

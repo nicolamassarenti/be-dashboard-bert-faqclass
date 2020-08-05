@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
 	"google.golang.org/api/iterator"
 )
 
@@ -35,10 +34,10 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 }
 
 // GetAll returns all the documents of a collection
-func (handler *FirestoreHandler) GetAll(collection string) ([]domain.Faq, error) {
+func (handler *FirestoreHandler) GetAll(collection string) ([]map[string]interface{}, error) {
 	iter := handler.Client.Collection(collection).Documents(handler.Context)
 
-	var faqs []domain.Faq
+	var faqs []map[string]interface{}
 
 	for {
 		doc, err := iter.Next()
@@ -48,38 +47,25 @@ func (handler *FirestoreHandler) GetAll(collection string) ([]domain.Faq, error)
 		if err != nil {
 			return nil, err
 		}
-		var faq domain.Faq
 
-		err = doc.DataTo(&faq)
-		if err != nil {
-			return nil, err
-		}
-
-		faqs = append(faqs, faq)
+		faqs = append(faqs, doc.Data())
 	}
 
 	return faqs, nil
 }
 
 // Get returns a specific faq
-func (handler *FirestoreHandler) Get(collection string, ID string) (domain.Faq, error) {
+func (handler *FirestoreHandler) Get(collection string, ID string) (map[string]interface{}, error) {
 
 	iter := handler.Client.Collection(collection).Where("ID", "==", ID).Documents(handler.Context)
 	defer iter.Stop()
 
-	var faq domain.Faq
-
 	doc, err := iter.Next()
 	if err != nil {
-		return domain.Faq{}, err
+		return nil, err
 	}
 
-	err = doc.DataTo(&faq)
-	if err != nil {
-		return domain.Faq{}, err
-	}
-
-	return faq, nil
+	return doc.Data(), nil
 }
 
 // ChangeBool changes the bool value of a document
@@ -97,9 +83,9 @@ func (handler *FirestoreHandler) ChangeBool(collection string, ID, path string, 
 }
 
 // Store adds a new faq
-func (handler *FirestoreHandler) Store(collection string, faq *domain.Faq) error {
+func (handler *FirestoreHandler) Store(collection string, data *map[string]interface{}) error {
 
-	_, _, err := handler.Client.Collection(collection).Add(handler.Context, faq)
+	_, _, err := handler.Client.Collection(collection).Add(handler.Context, data)
 
 	return err
 }

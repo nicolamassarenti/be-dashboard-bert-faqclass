@@ -18,6 +18,11 @@ type KnowledgeBaseInteractor interface {
 	DeleteFaq(ID string) error
 }
 
+// LanguagesInteractor is the interacot that links the webservice to the usecases
+type LanguagesInteractor interface {
+	GetAllLanguages() ([]usecases.Language, error)
+}
+
 // KB is the struct that contains the preview of all the KB
 type KB struct {
 	KB []FaqPreview `json:"kb,omitempty"`
@@ -55,6 +60,7 @@ type faqOverview struct {
 // WebserviceHandler it's the handler for REST api
 type WebserviceHandler struct {
 	KnowledgeBaseInteractor KnowledgeBaseInteractor
+	LanguagesInteractor     LanguagesInteractor
 	Logger                  usecases.Logger
 }
 
@@ -74,6 +80,33 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 
 	handler.Logger.Debug("Response set-up, returning the request")
 	handler.Logger.Info("Returning response")
+	return
+}
+
+// GetAllLanguages returns all the languages
+func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received request to " + req.URL.Path)
+
+	languages, err := handler.LanguagesInteractor.GetAllLanguages()
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	languagesMap := languagesToFrontEnd(languages)
+
+	var body []byte
+	if body, err = json.Marshal(languagesMap); err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	res.Header().Add("Content-Type", "application/json")
+
+	res.WriteHeader(200)
+	res.Write(body)
+	handler.Logger.Info("Returning response")
+
 	return
 }
 
