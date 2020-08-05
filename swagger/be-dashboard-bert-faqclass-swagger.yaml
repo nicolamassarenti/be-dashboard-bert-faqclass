@@ -17,7 +17,23 @@ tags:
   description: The information about the KB and the faqs.
 - name: Training
   description: The information about the training of the model.
+- name: Languages
+  description: Defines the languages managed by the model.
 paths:
+  /lang:
+    get:
+      tags: 
+      - Languages
+      summary: Get all the languages managed by the model
+      description: Returns the languages that the model manages, hence the languages that can be used to create examples for the faqs.
+      operationId: languages
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/languages'
   /training:
     get:
       tags:
@@ -202,42 +218,44 @@ components:
           example: true
         examples:
           type: object
-          properties:
-            it:
-              type: array
-              example:
-              - Come cambio la password?
-              - Voglio cambiare la password
-              items:
-                type: string
-            en:
-              type: array
-              example:
-              - How do I change the password?
-              - I want to change the password
-              items:
-                type: string
-            fr:
-              type: array
-              example:
-              - Comment changer le mot de passe?
-              - Je veux changer le mot de passe
-              items:
-                type: string
-            de:
-              type: array
-              example:
-              - Wie ändere ich das Passwort?
-              - Ich möchte das Passwort ändern
-              items:
-                type: string
-            nl:
-              type: array
-              example:
-              - Hoe wijzig ik het wachtwoord?
-              - Ik wil het wachtwoord wijzigen
-              items:
-                type: string
+          additionalProperties:
+            type: object
+            properties:
+              it:
+                type: array
+                example:
+                - Come cambio la password?
+                - Voglio cambiare la password
+                items:
+                  type: string
+              en:
+                type: array
+                example:
+                - How do I change the password?
+                - I want to change the password
+                items:
+                  type: string
+              fr:
+                type: array
+                example:
+                - Comment changer le mot de passe?
+                - Je veux changer le mot de passe
+                items:
+                  type: string
+              de:
+                type: array
+                example:
+                - Wie ändere ich das Passwort?
+                - Ich möchte das Passwort ändern
+                items:
+                  type: string
+              nl:
+                type: array
+                example:
+                - Hoe wijzig ik het wachtwoord?
+                - Ik wil het wachtwoord wijzigen
+                items:
+                  type: string
     training:
       type: object
       properties:
@@ -269,3 +287,9 @@ components:
               inactive:
                 type: integer
                 example: 1
+    languages:
+      type: object
+      additionalProperties:
+        type: string
+      example: 
+        {"it":"Italian", "en":"English"}
