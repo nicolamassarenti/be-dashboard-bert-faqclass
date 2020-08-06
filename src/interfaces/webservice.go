@@ -66,7 +66,7 @@ type WebserviceHandler struct {
 
 // Alive returns 200 OK
 func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	body, err := json.Marshal("I am alive")
 	if err != nil {
@@ -85,7 +85,7 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 
 // GetAllLanguages returns all the languages
 func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	languages, err := handler.LanguagesInteractor.GetAllLanguages()
 	if err != nil {
@@ -112,7 +112,7 @@ func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *h
 
 // KnowledgeBase is the handler function that returns the kb
 func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	faqsUseCase, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
 	if err != nil {
@@ -144,11 +144,11 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 
 // Faq is the handler function that returns a Faq
 func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
-	id = mux.Vars(req)["id"]
+	id = req.URL.Query().Get("id")
 
 	// Retrieving the Faq
 	usecaseFaq, err := handler.KnowledgeBaseInteractor.Faq(id)
@@ -176,7 +176,7 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 
 // ChangeTrainingStatus is the handler function that returns a Faq
 func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
@@ -184,7 +184,7 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 	var err error
 
 	// Retrieving the ID
-	id = mux.Vars(req)["id"]
+	id = req.URL.Query().Get("id")
 
 	// Retrieving the "toTrain" from the query string parameters
 	toTrain, err = strconv.ParseBool(mux.Vars(req)["toTrain"])
@@ -208,7 +208,7 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 
 // AddFaq is the handler function that adds a new Faq
 func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
@@ -216,7 +216,7 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 	var newFaq Faq
 
 	// Retrieving the ID
-	id = mux.Vars(req)["id"]
+	id = req.URL.Query().Get("id")
 
 	// Parsing the request body
 	err = json.NewDecoder(req.Body).Decode(&newFaq)
@@ -249,14 +249,14 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 
 // DeleteFaq is the handler function that adds a new Faq
 func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received request to " + req.URL.Path)
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
 	var err error
 
 	// Retrieving the ID
-	id = mux.Vars(req)["id"]
+	id = req.URL.Query().Get("id")
 
 	// Deleting the new Faq
 	err = handler.KnowledgeBaseInteractor.DeleteFaq(id)
