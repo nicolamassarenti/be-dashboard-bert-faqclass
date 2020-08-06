@@ -47,7 +47,8 @@ func main() {
 
 	// Routes
 	rtr := mux.NewRouter()
-	rtr.HandleFunc("/alive", webserviceHandler.Alive)
+	rtr.HandleFunc("/alive", webserviceHandler.Alive).
+		Methods(http.MethodGet)
 
 	rtr.HandleFunc("/api/lang", webserviceHandler.GetAllLanguages).
 		Methods(http.MethodGet)
@@ -58,10 +59,10 @@ func main() {
 	rtr.HandleFunc("/api/faq", webserviceHandler.Faq).
 		Methods(http.MethodGet)
 
-	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.AddFaq).
+	rtr.HandleFunc("/api/faq", webserviceHandler.AddFaq).
 		Methods(http.MethodPost)
 
-	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.DeleteFaq).
+	rtr.HandleFunc("/api/faq", webserviceHandler.DeleteFaq).
 		Methods(http.MethodDelete)
 
 	rtr.HandleFunc("/api/training/faq", webserviceHandler.ChangeTrainingStatus).
