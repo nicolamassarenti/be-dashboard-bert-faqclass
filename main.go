@@ -52,21 +52,21 @@ func main() {
 	rtr.HandleFunc("/api/lang", webserviceHandler.GetAllLanguages).
 		Methods(http.MethodGet)
 
-	rtr.HandleFunc("/api/faq", webserviceHandler.KnowledgeBase).
+	rtr.HandleFunc("/api/kb", webserviceHandler.KnowledgeBase).
 		Methods(http.MethodGet)
 
-	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.Faq).
+	rtr.HandleFunc("/api/faq", webserviceHandler.Faq).
 		Methods(http.MethodGet)
-
-	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.ChangeTrainingStatus).
-		Methods(http.MethodPut).
-		Queries("toTrain")
 
 	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.AddFaq).
 		Methods(http.MethodPost)
 
 	rtr.HandleFunc("/api/faq/{id}", webserviceHandler.DeleteFaq).
 		Methods(http.MethodDelete)
+
+	rtr.HandleFunc("/api/training/faq", webserviceHandler.ChangeTrainingStatus).
+		Methods(http.MethodPut).
+		Queries("toTrain")
 
 	http.Handle("/", rtr)
 
