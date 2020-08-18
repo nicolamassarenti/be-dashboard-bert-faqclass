@@ -148,7 +148,19 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 
 	// Retrieving the ID from the url
 	var id string
-	id = req.URL.Query().Get("id")
+	ids, ok := req.URL.Query()["id"]
+	if !ok || len(ids) != 1 {
+		if !ok {
+			handler.Logger.Info("Error retrieving the ID. Returning BadRequest")
+		} else if len(ids) == 0 {
+			handler.Logger.Info("No ID as query params. Returning BadRequest")
+		} else {
+			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
+		}
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	id = ids[0]
 
 	// Retrieving the Faq
 	usecaseFaq, err := handler.KnowledgeBaseInteractor.Faq(id)

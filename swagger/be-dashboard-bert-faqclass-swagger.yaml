@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  version: 1.0.1
 servers:
 - url: https://TODO/api
 - url: http://TODO/api
@@ -120,11 +120,11 @@ paths:
           description: Id not found
           content: {}
   
-    post:
+    put:
       tags:
       - Knowledge base
-      summary: Update or create a FAQ
-      description: Updates or create a FAQ.
+      summary: Updates a FAQ
+      description: Updates a FAQ.
       operationId: putFAQ
       parameters:
       - name: id
@@ -144,7 +144,7 @@ paths:
         200:
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/faq'
         400:
@@ -209,9 +209,6 @@ components:
     faq:
       type: object
       properties:
-        id:
-          type: string
-          example: "1234"
         mainQuestion:
           type: string
           example: Is this the main question?
@@ -220,44 +217,42 @@ components:
           example: true
         examples:
           type: object
-          additionalProperties:
-            type: object
-            properties:
-              it:
-                type: array
-                example:
-                - Come cambio la password?
-                - Voglio cambiare la password
-                items:
-                  type: string
-              en:
-                type: array
-                example:
-                - How do I change the password?
-                - I want to change the password
-                items:
-                  type: string
-              fr:
-                type: array
-                example:
-                - Comment changer le mot de passe?
-                - Je veux changer le mot de passe
-                items:
-                  type: string
-              de:
-                type: array
-                example:
-                - Wie ändere ich das Passwort?
-                - Ich möchte das Passwort ändern
-                items:
-                  type: string
-              nl:
-                type: array
-                example:
-                - Hoe wijzig ik het wachtwoord?
-                - Ik wil het wachtwoord wijzigen
-                items:
-                  type: string
+          properties:
+            it:
+              type: array
+              example:
+              - Come cambio la password?
+              - Voglio cambiare la password
+              items:
+                type: string
+            en:
+              type: array
+              example:
+              - How do I change the password?
+              - I want to change the password
+              items:
+                type: string
+            fr:
+              type: array
+              example:
+              - Comment changer le mot de passe?
+              - Je veux changer le mot de passe
+              items:
+                type: string
+            de:
+              type: array
+              example:
+              - Wie ändere ich das Passwort?
+              - Ich möchte das Passwort ändern
+              items:
+                type: string
+            nl:
+              type: array
+              example:
+              - Hoe wijzig ik het wachtwoord?
+              - Ik wil het wachtwoord wijzigen
+              items:
+                type: string
     training:
       type: object
       properties:
