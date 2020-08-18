@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
 	"github.com/gorilla/mux"
+
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 // KnowledgeBaseInteractor is the interactor that links the webservice to the usecases
@@ -37,7 +38,6 @@ type FaqPreview struct {
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
 type Faq struct {
-	ID           string              `json:"id,omitempty"`
 	MainQuestion string              `json:"mainQuestion,omitempty"`
 	Answers      []Answer            `json:"answers,omitempty"`
 	Trained      bool                `json:"trained,omitempty"`
@@ -222,12 +222,6 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 	err = json.NewDecoder(req.Body).Decode(&newFaq)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	// Checking if the ID of the query string is the same of the body
-	if id != newFaq.ID {
-		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

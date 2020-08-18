@@ -3,7 +3,7 @@ package usecases
 import (
 	"fmt"
 
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 )
 
 // Language defines the language
@@ -143,12 +143,6 @@ func (kbInteractor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, new
 
 // AddFaq adds a faq
 func (kbInteractor *KnowledgeBaseInteractor) AddFaq(faq Faq) error {
-	if faq.ID == "" {
-		message := "ID not valid - received %s"
-		err := fmt.Errorf(message, faq.ID)
-		kbInteractor.Logger.Error(err.Error())
-		return err
-	}
 
 	message := "Adding new faq with id %s"
 	kbInteractor.Logger.Info(fmt.Sprintf(message, faq.ID))

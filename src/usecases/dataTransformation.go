@@ -1,7 +1,7 @@
 package usecases
 
 import (
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 )
 
 // faqFromDomainLayer transfroms a FAQ from the struct of domain to the struct of the usecases layer

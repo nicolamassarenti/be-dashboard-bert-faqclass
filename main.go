@@ -10,9 +10,9 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/infrastructure"
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/interfaces"
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 func main() {

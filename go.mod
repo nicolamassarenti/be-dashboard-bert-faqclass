@@ -1,4 +1,4 @@
-module github.com/NicolaMassarenti/be-dashboard-bert-faqclass
+module github.com/nicolamassarenti/be-dashboard-bert-faqclass
 
 go 1.14
 

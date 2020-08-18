@@ -3,7 +3,7 @@ package interfaces
 import (
 	"github.com/fatih/structs"
 
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
@@ -16,7 +16,7 @@ func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
 	for _, example := range faq.TrainingExamples {
 		trainingExamples[example.Language] = example.Examples
 	}
-	return Faq{faq.ID, faq.MainExample, answers, faq.IsTrained, trainingExamples}
+	return Faq{faq.MainExample, answers, faq.IsTrained, trainingExamples}
 }
 
 func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
@@ -32,7 +32,7 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 	}
 
 	return usecases.Faq{
-		faq.ID,
+		"",
 		faq.MainQuestion,
 		answers,
 		faq.Trained,

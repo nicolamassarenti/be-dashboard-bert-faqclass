@@ -3,8 +3,8 @@ package interfaces
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/domain"
-	"github.com/NicolaMassarenti/be-dashboard-bert-faqclass/src/usecases"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 // DBHandler is the interface for the handler of the DB for the FAQ
