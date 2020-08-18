@@ -210,13 +210,8 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
-	// Retrieving the ID from the url
-	var id string
 	var err error
 	var newFaq Faq
-
-	// Retrieving the ID
-	id = req.URL.Query().Get("id")
 
 	// Parsing the request body
 	err = json.NewDecoder(req.Body).Decode(&newFaq)
