@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
@@ -60,7 +59,7 @@ func main() {
 		Methods(http.MethodGet)
 
 	rtr.HandleFunc("/api/faq", webserviceHandler.AddFaq).
-		Methods(http.MethodPost)
+		Methods(http.MethodPost, http.MethodOptions)
 
 	rtr.HandleFunc("/api/faq", webserviceHandler.DeleteFaq).
 		Methods(http.MethodDelete)
@@ -73,8 +72,9 @@ func main() {
 
 	logger.Info("Router and handler function created")
 
+	rtr.Use(mux.CORSMethodMiddleware(rtr))
 	// Server
 	logger.Info("Server starting at port " + port)
-	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS()(rtr)))
+	log.Fatal(http.ListenAndServe(":"+port, rtr))
 
 }

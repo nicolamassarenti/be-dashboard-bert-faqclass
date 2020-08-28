@@ -222,6 +222,11 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
 	var err error
 	var newFaq Faq
 
