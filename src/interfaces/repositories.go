@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
@@ -14,6 +15,29 @@ type DBHandler interface {
 	GetAll(collection string) ([]map[string]interface{}, error)
 	ChangeBool(collection string, ID, path string, value bool) error
 	Delete(collection string, ID string) error
+}
+
+type repositoryFaq struct {
+	MainExample      string
+	Answers          []answer
+	IsTrained        bool
+	TrainingExamples []trainingExample
+}
+
+type trainingExample struct {
+	Language string
+	Examples []string
+}
+
+type answer struct {
+	Lang   string
+	Answer string
+}
+
+// repositoryFaqWithId is the Faq retrieved by the repository
+type repositoryFaqWithId struct {
+	ID  string     `json:"ID,omitempty"`
+	Faq domain.Faq `json:"Faq,omitempty"`
 }
 
 // LanguageDBRepo is the object for the languages db handler
@@ -66,14 +90,30 @@ func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
 
 // KnowledgeBase is the implementation that returns all the faq of the knowledge base
 func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
-	var kb []domain.Faq
+	var repFaqArray []repositoryFaqWithId
 	faqs, err := repo.Handler.GetAll(repo.collection)
 	if err != nil {
-		return kb, err
+		return nil, err
 	}
 
-	mapstructure.Decode(faqs, &kb)
-	return kb, err
+	// deconding the map to my type `repositoryFaqWithId`
+	mapstructure.Decode(faqs, &repFaqArray)
+
+	var kb []domain.Faq
+	for _, repFaq := range repFaqArray {
+		kb = append(
+			kb,
+			domain.Faq{
+				ID:               repFaq.ID,
+				MainExample:      repFaq.Faq.MainExample,
+				Answers:          repFaq.Faq.Answers,
+				IsTrained:        repFaq.Faq.IsTrained,
+				TrainingExamples: repFaq.Faq.TrainingExamples,
+			},
+		)
+	}
+
+	return kb, nil
 }
 
 // Faq is the implementation that returns a specific ID
@@ -96,8 +136,12 @@ func (repo *KBHandler) ChangeTrainingStatus(ID string, newStatus bool) error {
 
 // AddFaq adds a new faq
 func (repo *KBHandler) AddFaq(faq domain.Faq) error {
-	var faqMap map[string]interface{}
-	faqMap = structToMap(faq)
+	faqMap := map[string]interface{}{
+		"MainExample":      structs.Map(faq.MainExample),
+		"Answers":          structs.Map(faq.Answers),
+		"IsTrained":        structs.Map(faq.IsTrained),
+		"TrainingExamples": structs.Map(faq.TrainingExamples),
+	}
 	return repo.Handler.Store(repo.collection, &faqMap)
 
 }

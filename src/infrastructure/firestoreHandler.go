@@ -48,7 +48,10 @@ func (handler *FirestoreHandler) GetAll(collection string) ([]map[string]interfa
 			return nil, err
 		}
 
-		faqs = append(faqs, doc.Data())
+		faqs = append(faqs, map[string]interface{}{
+			"ID":  doc.Ref.ID,
+			"faq": doc.Data(),
+		})
 	}
 
 	return faqs, nil
