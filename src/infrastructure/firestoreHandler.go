@@ -60,15 +60,13 @@ func (handler *FirestoreHandler) GetAll(collection string) ([]map[string]interfa
 // Get returns a specific faq
 func (handler *FirestoreHandler) Get(collection string, ID string) (map[string]interface{}, error) {
 
-	iter := handler.Client.Collection(collection).Where("ID", "==", ID).Documents(handler.Context)
-	defer iter.Stop()
+	doc, err := handler.Client.Doc(collection + "/" + ID).Get(handler.Context)
 
-	doc, err := iter.Next()
 	if err != nil {
 		return nil, err
 	}
 
-	return doc.Data(), nil
+	return doc.Data(), err
 }
 
 // ChangeBool changes the bool value of a document

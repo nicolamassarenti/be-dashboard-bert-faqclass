@@ -34,8 +34,8 @@ type answer struct {
 	Answer string
 }
 
-// repositoryFaqWithId is the Faq retrieved by the repository
-type repositoryFaqWithId struct {
+// repositoryFaqWithID is the Faq retrieved by the repository
+type repositoryFaqWithID struct {
 	ID  string     `json:"ID,omitempty"`
 	Faq domain.Faq `json:"Faq,omitempty"`
 }
@@ -80,7 +80,7 @@ func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
 }
 
 // NewFaqDBHandler creates a new handler for the faq
-func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
+func NewFaqDBHandler(dbHandler DBHandler, collection, path string) *KBHandler {
 
 	kbHandler := new(KBHandler)
 	kbHandler.Handler = dbHandler
@@ -90,13 +90,13 @@ func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
 
 // KnowledgeBase is the implementation that returns all the faq of the knowledge base
 func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
-	var repFaqArray []repositoryFaqWithId
+	var repFaqArray []repositoryFaqWithID
 	faqs, err := repo.Handler.GetAll(repo.collection)
 	if err != nil {
 		return nil, err
 	}
 
-	// deconding the map to my type `repositoryFaqWithId`
+	// deconding the map to my type `repositoryFaqWithID`
 	mapstructure.Decode(faqs, &repFaqArray)
 
 	var kb []domain.Faq
