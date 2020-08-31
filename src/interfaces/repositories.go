@@ -80,7 +80,7 @@ func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
 }
 
 // NewFaqDBHandler creates a new handler for the faq
-func NewFaqDBHandler(dbHandler DBHandler, collection, path string) *KBHandler {
+func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
 
 	kbHandler := new(KBHandler)
 	kbHandler.Handler = dbHandler
