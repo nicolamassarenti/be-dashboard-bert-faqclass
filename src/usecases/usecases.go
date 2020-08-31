@@ -58,6 +58,92 @@ type KnowledgeBaseInteractor struct {
 	Logger        Logger
 }
 
+// AddFaq adds a faq
+func (kbInteractor *KnowledgeBaseInteractor) AddFaq(faq Faq) error {
+
+	message := "Adding new faq with id %s"
+	kbInteractor.Logger.Info(fmt.Sprintf(message, faq.ID))
+
+	faqDomain := faqToDomainLayer(faq)
+
+	domainErr := kbInteractor.FaqRepository.AddFaq(faqDomain)
+	if domainErr != nil {
+		message = "Error adding the new faq with id %s"
+		err := fmt.Errorf(message, faq.ID, domainErr.Error())
+		kbInteractor.Logger.Error(err.Error())
+		return err
+	}
+	return nil
+}
+
+// ChangeTrainingStatus changes the training status of a FAQ
+func (kbInteractor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, newStatus bool) error {
+
+	if ID == "" {
+		message := "ID not valid - received %s"
+		err := fmt.Errorf(message, ID)
+		kbInteractor.Logger.Error(err.Error())
+		return err
+	}
+
+	kbInteractor.Logger.Info(fmt.Sprintf("Chaging training status of Faq with ID: %s", ID))
+
+	if domainErr := kbInteractor.FaqRepository.ChangeTrainingStatus(ID, newStatus); domainErr != nil {
+		message := "Error changing the training status of Faq with ID: %s"
+		err := fmt.Errorf(message, ID, domainErr.Error())
+		kbInteractor.Logger.Error(err.Error())
+		return err
+	}
+	return nil
+}
+
+// DeleteFaq deletes a faq
+func (kbInteractor *KnowledgeBaseInteractor) DeleteFaq(ID string) error {
+	if ID == "" {
+		message := "ID not valid - received %s"
+		err := fmt.Errorf(message, ID)
+		kbInteractor.Logger.Error(err.Error())
+		return err
+	}
+
+	message := "Deleting faq with id: %s"
+	kbInteractor.Logger.Info(fmt.Sprintf(message, ID))
+
+	domainErr := kbInteractor.FaqRepository.DeleteFaq(ID)
+	if domainErr != nil {
+		message = "Error deleting faq with id %s"
+		err := fmt.Errorf(message, ID, domainErr.Error())
+		kbInteractor.Logger.Error(err.Error())
+		return err
+	}
+	return nil
+}
+
+// Faq returns a faq with a given ID
+func (kbInteractor *KnowledgeBaseInteractor) Faq(ID string) (Faq, error) {
+	var message string
+
+	if ID == "" {
+		message = "ID not valid - received %s"
+		err := fmt.Errorf(message, ID)
+		kbInteractor.Logger.Error(err.Error())
+		return Faq{}, err
+	}
+
+	message = fmt.Sprintf("Retrieving Faq with ID: %s", ID)
+	kbInteractor.Logger.Info(message)
+
+	faq, domainErr := kbInteractor.FaqRepository.Faq(ID)
+	if domainErr != nil {
+		message = "Error retrieving the Faq with ID: %s - %s"
+		err := fmt.Errorf(message, ID, domainErr.Error())
+		kbInteractor.Logger.Error(err.Error())
+		return Faq{}, err
+	}
+
+	return faqFromDomainLayer(faq), nil
+}
+
 // GetAllLanguages returns all the languages
 func (langInteractor *LanguageInteractor) GetAllLanguages() (langs []Language, err error) {
 	langInteractor.Logger.Info("Retrieving the languages")
@@ -95,34 +181,8 @@ func (kbInteractor *KnowledgeBaseInteractor) KnowledgeBase() (faqs []Faq, err er
 	return faqs, nil
 }
 
-// Faq returns a faq with a given ID
-func (kbInteractor *KnowledgeBaseInteractor) Faq(ID string) (Faq, error) {
-	var message string
-
-	if ID == "" {
-		message = "ID not valid - received %s"
-		err := fmt.Errorf(message, ID)
-		kbInteractor.Logger.Error(err.Error())
-		return Faq{}, err
-	}
-
-	message = fmt.Sprintf("Retrieving Faq with ID: %s", ID)
-	kbInteractor.Logger.Info(message)
-
-	faq, domainErr := kbInteractor.FaqRepository.Faq(ID)
-	if domainErr != nil {
-		message = "Error retrieving the Faq with ID: %s - %s"
-		err := fmt.Errorf(message, ID, domainErr.Error())
-		kbInteractor.Logger.Error(err.Error())
-		return Faq{}, err
-	}
-
-	return faqFromDomainLayer(faq), nil
-}
-
-// ChangeTrainingStatus changes the training status of a FAQ
-func (kbInteractor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, newStatus bool) error {
-
+// UpdateFaq updates an existing faq
+func (kbInteractor *KnowledgeBaseInteractor) Update(ID string, faq Faq) error {
 	if ID == "" {
 		message := "ID not valid - received %s"
 		err := fmt.Errorf(message, ID)
@@ -130,48 +190,12 @@ func (kbInteractor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, new
 		return err
 	}
 
-	kbInteractor.Logger.Info(fmt.Sprintf("Chaging training status of Faq with ID: %s", ID))
-
-	if domainErr := kbInteractor.FaqRepository.ChangeTrainingStatus(ID, newStatus); domainErr != nil {
-		message := "Error changing the training status of Faq with ID: %s"
-		err := fmt.Errorf(message, ID, domainErr.Error())
-		kbInteractor.Logger.Error(err.Error())
-		return err
-	}
-	return nil
-}
-
-// AddFaq adds a faq
-func (kbInteractor *KnowledgeBaseInteractor) AddFaq(faq Faq) error {
-
-	message := "Adding new faq with id %s"
-	kbInteractor.Logger.Info(fmt.Sprintf(message, faq.ID))
+	message := "Updating faq with id: %s"
+	kbInteractor.Logger.Info(fmt.Sprintf(message, ID))
 
 	faqDomain := faqToDomainLayer(faq)
 
-	domainErr := kbInteractor.FaqRepository.AddFaq(faqDomain)
-	if domainErr != nil {
-		message = "Error adding the new faq with id %s"
-		err := fmt.Errorf(message, faq.ID, domainErr.Error())
-		kbInteractor.Logger.Error(err.Error())
-		return err
-	}
-	return nil
-}
-
-// DeleteFaq deletes a faq
-func (kbInteractor *KnowledgeBaseInteractor) DeleteFaq(ID string) error {
-	if ID == "" {
-		message := "ID not valid - received %s"
-		err := fmt.Errorf(message, ID)
-		kbInteractor.Logger.Error(err.Error())
-		return err
-	}
-
-	message := "Deleting faq with id: %s"
-	kbInteractor.Logger.Info(fmt.Sprintf(message, ID))
-
-	domainErr := kbInteractor.FaqRepository.DeleteFaq(ID)
+	domainErr := kbInteractor.FaqRepository.Update(ID, faqDomain)
 	if domainErr != nil {
 		message = "Error deleting faq with id %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())

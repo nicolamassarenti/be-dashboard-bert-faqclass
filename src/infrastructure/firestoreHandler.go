@@ -24,13 +24,49 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	// defer client.Close()
-
 	firestoreHandler := new(FirestoreHandler)
 	firestoreHandler.Client = client
 	firestoreHandler.Context = ctx
 
+	defer firestoreHandler.Client.Close()
+
 	return firestoreHandler
+}
+
+// Add adds a new faq
+func (handler *FirestoreHandler) Add(collection string, data *map[string]interface{}) error {
+
+	_, _, err := handler.Client.Collection(collection).Add(handler.Context, data)
+
+	return err
+}
+
+// ChangeBool changes the bool value of a document
+func (handler *FirestoreHandler) ChangeBool(collection string, ID, path string, value bool) error {
+	_, err := handler.Client.Doc(collection+"/"+ID).Update(handler.Context, []firestore.Update{
+		{Path: path, Value: value},
+	})
+
+	return err
+}
+
+// Delete deletes an Faq
+func (handler *FirestoreHandler) Delete(collection string, ID string) error {
+	_, err := handler.Client.Doc(collection + "/" + ID).Delete(handler.Context)
+
+	return err
+}
+
+// Get returns a specific faq
+func (handler *FirestoreHandler) Get(collection string, ID string) (map[string]interface{}, error) {
+
+	doc, err := handler.Client.Doc(collection + "/" + ID).Get(handler.Context)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return doc.Data(), err
 }
 
 // GetAll returns all the documents of a collection
@@ -57,43 +93,9 @@ func (handler *FirestoreHandler) GetAll(collection string) ([]map[string]interfa
 	return faqs, nil
 }
 
-// Get returns a specific faq
-func (handler *FirestoreHandler) Get(collection string, ID string) (map[string]interface{}, error) {
-
-	doc, err := handler.Client.Doc(collection + "/" + ID).Get(handler.Context)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return doc.Data(), err
-}
-
-// ChangeBool changes the bool value of a document
-func (handler *FirestoreHandler) ChangeBool(collection string, ID, path string, value bool) error {
-	iter := handler.Client.Collection(collection).Where("ID", "==", ID).Documents(handler.Context)
-	defer iter.Stop()
-
-	doc := handler.Client.Doc(ID)
-
-	_, err := doc.Update(handler.Context, []firestore.Update{
-		{Path: path, Value: value},
-	})
-
-	return err
-}
-
-// Store adds a new faq
-func (handler *FirestoreHandler) Store(collection string, data *map[string]interface{}) error {
-
-	_, _, err := handler.Client.Collection(collection).Add(handler.Context, data)
-
-	return err
-}
-
-// Delete deletes an Faq
-func (handler *FirestoreHandler) Delete(collection string, ID string) error {
-	_, err := handler.Client.Collection(collection).Doc(ID).Delete(handler.Context)
+// Update updates a Faq
+func (handler *FirestoreHandler) Update(collection string, ID string, data map[string]interface{}) error {
+	_, err := handler.Client.Doc(collection + "/" + ID).Set(handler.Context, data)
 
 	return err
 }

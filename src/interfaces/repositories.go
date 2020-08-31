@@ -10,11 +10,12 @@ import (
 
 // DBHandler is the interface for the handler of the DB for the FAQ
 type DBHandler interface {
-	Store(collection string, faq *map[string]interface{}) error
-	Get(collection string, ID string) (map[string]interface{}, error)
-	GetAll(collection string) ([]map[string]interface{}, error)
+	Add(collection string, faq *map[string]interface{}) error
 	ChangeBool(collection string, ID, path string, value bool) error
 	Delete(collection string, ID string) error
+	Get(collection string, ID string) (map[string]interface{}, error)
+	GetAll(collection string) ([]map[string]interface{}, error)
+	Update(collection string, ID string, data map[string]interface{}) error
 }
 
 type repositoryFaq struct {
@@ -142,11 +143,23 @@ func (repo *KBHandler) AddFaq(faq domain.Faq) error {
 		"IsTrained":        structs.Map(faq.IsTrained),
 		"TrainingExamples": structs.Map(faq.TrainingExamples),
 	}
-	return repo.Handler.Store(repo.collection, &faqMap)
+	return repo.Handler.Add(repo.collection, &faqMap)
 
 }
 
 // DeleteFaq deletes a faq
 func (repo *KBHandler) DeleteFaq(ID string) error {
 	return repo.Handler.Delete(repo.collection, ID)
+}
+
+// AddFaq adds a new faq
+func (repo *KBHandler) Update(ID string, faq domain.Faq) error {
+	faqMap := map[string]interface{}{
+		"MainExample":      structs.Map(faq.MainExample),
+		"Answers":          structs.Map(faq.Answers),
+		"IsTrained":        structs.Map(faq.IsTrained),
+		"TrainingExamples": structs.Map(faq.TrainingExamples),
+	}
+	return repo.Handler.Update(repo.collection, ID, faqMap)
+
 }

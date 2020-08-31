@@ -22,20 +22,19 @@ func NewLogger() Logger {
 	return logger
 }
 
-// Info logs an info event
-func (logger Logger) Info(message string) {
-	logger.logger.Info(message)
-}
-
 // Debug logs a debug event
 func (logger Logger) Debug(message string) {
 	logger.logger.Debug(message)
-
 }
 
 // Error logs an error event
 func (logger Logger) Error(message string) {
 	logger.logger.Error(message)
+}
+
+// Info logs an info event
+func (logger Logger) Info(message string) {
+	logger.logger.Info(message)
 }
 
 // Fatal logs a fatal event

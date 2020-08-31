@@ -12,11 +12,12 @@ import (
 
 // KnowledgeBaseInteractor is the interactor that links the webservice to the usecases
 type KnowledgeBaseInteractor interface {
-	KnowledgeBase() ([]usecases.Faq, error)
-	Faq(ID string) (usecases.Faq, error)
-	ChangeTrainingStatus(ID string, newStatus bool) error
 	AddFaq(usecases.Faq) error
+	ChangeTrainingStatus(ID string, newStatus bool) error
 	DeleteFaq(ID string) error
+	Faq(ID string) (usecases.Faq, error)
+	KnowledgeBase() ([]usecases.Faq, error)
+	Update(ID string, faq usecases.Faq) error
 }
 
 // LanguagesInteractor is the interacot that links the webservice to the usecases
@@ -83,6 +84,97 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 	return
 }
 
+// AddFaq is the handler function that adds a new Faq
+func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
+	var err error
+	var newFaq Faq
+
+	// Parsing the request body
+	err = json.NewDecoder(req.Body).Decode(&newFaq)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Data transformation
+	usecasesFaq := webserviceFaqToUsecaseFaq(newFaq)
+
+	// Adding the new Faq
+	err = handler.KnowledgeBaseInteractor.AddFaq(usecasesFaq)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Preparing the response
+	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
+	return
+}
+
+// ChangeTrainingStatus is the handler function that returns a Faq
+func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	// Retrieving the ID from the url
+	var id string
+	var toTrain bool
+	var err error
+
+	// Retrieving the ID
+	id = req.URL.Query().Get("id")
+
+	// Retrieving the "toTrain" from the query string parameters
+	toTrain, err = strconv.ParseBool(mux.Vars(req)["toTrain"])
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Retrieving the Faq
+	err = handler.KnowledgeBaseInteractor.ChangeTrainingStatus(id, toTrain)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Preparing the response
+	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
+	return
+}
+
+// DeleteFaq is the handler function that adds a new Faq
+func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	// Retrieving the ID from the url
+	var id string
+	var err error
+
+	// Retrieving the ID
+	id = req.URL.Query().Get("id")
+
+	// Deleting the new Faq
+	err = handler.KnowledgeBaseInteractor.DeleteFaq(id)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Preparing the response
+	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
+	return
+}
+
 // GetAllLanguages returns all the languages
 func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
@@ -107,38 +199,6 @@ func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *h
 	res.Write(body)
 	handler.Logger.Info("Returning response")
 
-	return
-}
-
-// KnowledgeBase is the handler function that returns the kb
-func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
-
-	faqsUseCase, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
-	if err != nil {
-		res.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	handler.Logger.Info("Transforming the data from usecase Faq to Webservice FaqPreview")
-	var faqs []FaqPreview
-	for _, faq := range faqsUseCase {
-		faqs = append(faqs, FaqPreview{faq.ID, faq.MainExample, faq.IsTrained})
-	}
-	kb := KB{faqs}
-	handler.Logger.Info("Data correctly transformed")
-
-	var body []byte
-	if body, err = json.Marshal(kb); err != nil {
-		res.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	res.Header().Add("Content-Type", "application/json")
-
-	res.WriteHeader(200)
-	res.Write(body)
-	handler.Logger.Info("Returning response")
 	return
 }
 
@@ -186,40 +246,40 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 	return
 }
 
-// ChangeTrainingStatus is the handler function that returns a Faq
-func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, req *http.Request) {
+// KnowledgeBase is the handler function that returns the kb
+func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
-	// Retrieving the ID from the url
-	var id string
-	var toTrain bool
-	var err error
-
-	// Retrieving the ID
-	id = req.URL.Query().Get("id")
-
-	// Retrieving the "toTrain" from the query string parameters
-	toTrain, err = strconv.ParseBool(mux.Vars(req)["toTrain"])
+	faqsUseCase, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// Retrieving the Faq
-	err = handler.KnowledgeBaseInteractor.ChangeTrainingStatus(id, toTrain)
-	if err != nil {
+	handler.Logger.Info("Transforming the data from usecase Faq to Webservice FaqPreview")
+	var faqs []FaqPreview
+	for _, faq := range faqsUseCase {
+		faqs = append(faqs, FaqPreview{faq.ID, faq.MainExample, faq.IsTrained})
+	}
+	kb := KB{faqs}
+	handler.Logger.Info("Data correctly transformed")
+
+	var body []byte
+	if body, err = json.Marshal(kb); err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// Preparing the response
+	res.Header().Add("Content-Type", "application/json")
+
 	res.WriteHeader(200)
+	res.Write(body)
 	handler.Logger.Info("Returning response")
 	return
 }
 
-// AddFaq is the handler function that adds a new Faq
-func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
+// UpdateFaq is the handler function that updates a faq
+func (handler WebserviceHandler) UpdateFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	res.Header().Set("Access-Control-Allow-Origin", "*")
@@ -228,44 +288,36 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 	}
 
 	var err error
-	var newFaq Faq
+	var updatedFaq Faq
 
 	// Parsing the request body
-	err = json.NewDecoder(req.Body).Decode(&newFaq)
+	err = json.NewDecoder(req.Body).Decode(&updatedFaq)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	// Data transformation
-	usecasesFaq := webserviceFaqToUsecaseFaq(newFaq)
-
-	// Adding the new Faq
-	err = handler.KnowledgeBaseInteractor.AddFaq(usecasesFaq)
-	if err != nil {
-		res.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	// Preparing the response
-	res.WriteHeader(200)
-	handler.Logger.Info("Returning response")
-	return
-}
-
-// DeleteFaq is the handler function that adds a new Faq
-func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Request) {
-	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
 	// Retrieving the ID from the url
 	var id string
-	var err error
+	ids, ok := req.URL.Query()["id"]
+	if !ok || len(ids) != 1 {
+		if !ok {
+			handler.Logger.Info("Error retrieving the ID. Returning BadRequest")
+		} else if len(ids) == 0 {
+			handler.Logger.Info("No ID as query params. Returning BadRequest")
+		} else {
+			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
+		}
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	id = ids[0]
 
-	// Retrieving the ID
-	id = req.URL.Query().Get("id")
+	// Data transformation
+	usecasesFaq := webserviceFaqToUsecaseFaq(updatedFaq)
 
-	// Deleting the new Faq
-	err = handler.KnowledgeBaseInteractor.DeleteFaq(id)
+	// Adding the new Faq
+	err = handler.KnowledgeBaseInteractor.Update(id, usecasesFaq)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return

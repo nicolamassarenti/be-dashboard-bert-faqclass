@@ -61,6 +61,9 @@ func main() {
 	rtr.HandleFunc("/api/faq", webserviceHandler.AddFaq).
 		Methods(http.MethodPost, http.MethodOptions)
 
+	rtr.HandleFunc("/api/faq", webserviceHandler.UpdateFaq).
+		Methods(http.MethodPut, http.MethodOptions)
+
 	rtr.HandleFunc("/api/faq", webserviceHandler.DeleteFaq).
 		Methods(http.MethodDelete)
 

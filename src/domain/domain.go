@@ -2,11 +2,12 @@ package domain
 
 // FaqRepository is the interface
 type FaqRepository interface {
-	KnowledgeBase() ([]Faq, error)
-	Faq(ID string) (Faq, error)
+	AddFaq(faq Faq) error
 	ChangeTrainingStatus(ID string, newStatus bool) error
-	AddFaq(Faq) error
 	DeleteFaq(ID string) error
+	Faq(ID string) (Faq, error)
+	KnowledgeBase() ([]Faq, error)
+	Update(ID string, faq Faq) error
 }
 
 // Faq contains the data that define a F.A.Q.
