@@ -16,3 +16,4 @@
 auth/*
 .env
 .vscode/*
+.idea/*
