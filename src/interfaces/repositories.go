@@ -132,17 +132,17 @@ func (repo *KBHandler) Faq(ID string) (faq domain.Faq, err error) {
 
 // ChangeTrainingStatus changes the "isTrained" bool of a Faq
 func (repo *KBHandler) ChangeTrainingStatus(ID string, newStatus bool) error {
-	path := "isTrained"
+	path := "IsTrained"
 	return repo.Handler.ChangeBool(repo.collection, ID, path, newStatus)
 }
 
 // AddFaq adds a new faq
 func (repo *KBHandler) AddFaq(faq domain.Faq) error {
 	faqMap := map[string]interface{}{
-		"MainExample":      structs.Map(faq.MainExample),
-		"Answers":          structs.Map(faq.Answers),
-		"IsTrained":        structs.Map(faq.IsTrained),
-		"TrainingExamples": structs.Map(faq.TrainingExamples),
+		"MainExample":      faq.MainExample,
+		"Answers":          faq.Answers,
+		"IsTrained":        faq.IsTrained,
+		"TrainingExamples": faq.TrainingExamples,
 	}
 	return repo.Handler.Add(repo.collection, &faqMap)
 

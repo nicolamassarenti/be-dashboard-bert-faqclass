@@ -2,12 +2,9 @@ package interfaces
 
 import (
 	"encoding/json"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
-
-	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 // KnowledgeBaseInteractor is the interactor that links the webservice to the usecases
@@ -34,7 +31,7 @@ type KB struct {
 type FaqPreview struct {
 	ID           string `json:"id,omitempty"`
 	MainQuestion string `json:"mainQuestion,omitempty"`
-	Trained      bool   `json:"trained,omitempty"`
+	Trained      bool   `json:"trained"`
 }
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
@@ -128,11 +125,9 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 	var toTrain bool
 	var err error
 
-	// Retrieving the ID
+	// Retrieving the ID and toTrain
 	id = req.URL.Query().Get("id")
-
-	// Retrieving the "toTrain" from the query string parameters
-	toTrain, err = strconv.ParseBool(mux.Vars(req)["toTrain"])
+	toTrain, err = strconv.ParseBool(req.URL.Query().Get("toTrain"))
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return

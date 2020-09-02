@@ -68,8 +68,7 @@ func main() {
 		Methods(http.MethodDelete)
 
 	rtr.HandleFunc("/api/training/faq", webserviceHandler.ChangeTrainingStatus).
-		Methods(http.MethodPut).
-		Queries("toTrain")
+		Methods(http.MethodPut)
 
 	http.Handle("/", rtr)
 
