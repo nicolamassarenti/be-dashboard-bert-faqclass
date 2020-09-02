@@ -1,8 +1,6 @@
 package interfaces
 
 import (
-	"github.com/fatih/structs"
-
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
@@ -40,15 +38,17 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 	}
 }
 
-func structToMap(item interface{}) map[string]interface{} {
-
-	return structs.Map(item)
-}
-
 func languagesToFrontEnd(langs []usecases.Language) map[string]string {
 	result := make(map[string]string)
 	for _, lang := range langs {
 		result[lang.IsoName] = lang.DisplayName
 	}
 	return result
+}
+
+func mapStringInterfaceToUsecasesLang(langMap map[string]interface{}) usecases.Language {
+	return usecases.Language{
+		IsoName: langMap["IsoName"].(string),
+		DisplayName: langMap["DisplayName"].(string),
+	}
 }

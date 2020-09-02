@@ -28,8 +28,6 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 	firestoreHandler.Client = client
 	firestoreHandler.Context = ctx
 
-	defer firestoreHandler.Client.Close()
-
 	return firestoreHandler
 }
 

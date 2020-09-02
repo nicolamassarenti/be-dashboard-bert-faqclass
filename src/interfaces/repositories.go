@@ -70,13 +70,14 @@ func NewLanguagesDBHandler(dbHandler DBHandler, collection string) *LanguagesHan
 
 // GetAllLanguages returns all the languages
 func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
-	var langs []usecases.Language
 	langsMap, err := repo.Handler.GetAll(repo.collection)
-	if err != nil {
-		return langs, err
+
+	langs := make([]usecases.Language, len(langsMap))
+	for idx, lang := range(langsMap){
+		data, _ := lang["faq"].(map[string]interface{})
+		langs[idx] = mapStringInterfaceToUsecasesLang(data)
 	}
 
-	mapstructure.Decode(langsMap, &langs)
 	return langs, err
 }
 
