@@ -1,7 +1,6 @@
 package interfaces
 
 import (
-	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
@@ -156,10 +155,10 @@ func (repo *KBHandler) DeleteFaq(ID string) error {
 // AddFaq adds a new faq
 func (repo *KBHandler) Update(ID string, faq domain.Faq) error {
 	faqMap := map[string]interface{}{
-		"MainExample":      structs.Map(faq.MainExample),
-		"Answers":          structs.Map(faq.Answers),
-		"IsTrained":        structs.Map(faq.IsTrained),
-		"TrainingExamples": structs.Map(faq.TrainingExamples),
+		"MainExample":      faq.MainExample,
+		"Answers":          faq.Answers,
+		"IsTrained":        faq.IsTrained,
+		"TrainingExamples": faq.TrainingExamples,
 	}
 	return repo.Handler.Update(repo.collection, ID, faqMap)
 

@@ -99,13 +99,6 @@ func (kbInteractor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, new
 
 // DeleteFaq deletes a faq
 func (kbInteractor *KnowledgeBaseInteractor) DeleteFaq(ID string) error {
-	if ID == "" {
-		message := "ID not valid - received %s"
-		err := fmt.Errorf(message, ID)
-		kbInteractor.Logger.Error(err.Error())
-		return err
-	}
-
 	message := "Deleting faq with id: %s"
 	kbInteractor.Logger.Info(fmt.Sprintf(message, ID))
 
@@ -183,13 +176,6 @@ func (kbInteractor *KnowledgeBaseInteractor) KnowledgeBase() (faqs []Faq, err er
 
 // UpdateFaq updates an existing faq
 func (kbInteractor *KnowledgeBaseInteractor) Update(ID string, faq Faq) error {
-	if ID == "" {
-		message := "ID not valid - received %s"
-		err := fmt.Errorf(message, ID)
-		kbInteractor.Logger.Error(err.Error())
-		return err
-	}
-
 	message := "Updating faq with id: %s"
 	kbInteractor.Logger.Info(fmt.Sprintf(message, ID))
 

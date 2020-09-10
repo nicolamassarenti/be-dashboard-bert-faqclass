@@ -36,10 +36,10 @@ type FaqPreview struct {
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
 type Faq struct {
-	MainQuestion string              `json:"mainQuestion,omitempty"`
-	Answers      []Answer            `json:"answers,omitempty"`
-	Trained      bool                `json:"trained,omitempty"`
-	Examples     map[string][]string `json:"examples,omitempty"`
+	MainQuestion string              `json:"mainQuestion"`
+	Answers      []Answer            `json:"answers"`
+	Trained      bool                `json:"trained"`
+	Examples     map[string][]string `json:"examples"`
 }
 
 // Answer contains the answer in a language
@@ -120,6 +120,11 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
 	// Retrieving the ID from the url
 	var id string
 	var toTrain bool
@@ -132,6 +137,8 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	handler.Logger.Info("ID: " + id + "\ttoTrain: " + strconv.FormatBool(toTrain))
 
 	// Retrieving the Faq
 	err = handler.KnowledgeBaseInteractor.ChangeTrainingStatus(id, toTrain)
@@ -149,6 +156,11 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 // DeleteFaq is the handler function that adds a new Faq
 func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		return
+	}
 
 	// Retrieving the ID from the url
 	var id string

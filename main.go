@@ -65,10 +65,10 @@ func main() {
 		Methods(http.MethodPut, http.MethodOptions)
 
 	rtr.HandleFunc("/api/faq", webserviceHandler.DeleteFaq).
-		Methods(http.MethodDelete)
+		Methods(http.MethodDelete, http.MethodOptions)
 
 	rtr.HandleFunc("/api/training/faq", webserviceHandler.ChangeTrainingStatus).
-		Methods(http.MethodPut)
+		Methods(http.MethodPut, http.MethodOptions)
 
 	http.Handle("/", rtr)
 
