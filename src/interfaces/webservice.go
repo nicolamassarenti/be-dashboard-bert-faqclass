@@ -62,6 +62,21 @@ type WebserviceHandler struct {
 	Logger                  usecases.Logger
 }
 
+func checkID(handler WebserviceHandler, res http.ResponseWriter, req *http.Request) bool{
+	ids, ok := req.URL.Query()["id"]
+	if !ok || len(ids) != 1 {
+		if !ok {
+			handler.Logger.Info("Error retrieving the ID. Returning BadRequest")
+		} else if len(ids) == 0 {
+			handler.Logger.Info("No ID as query params. Returning BadRequest")
+		} else {
+			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
+		}
+		res.WriteHeader(http.StatusBadRequest)
+	}
+	return ok
+}
+
 // Alive returns 200 OK
 func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
@@ -131,9 +146,26 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 	var err error
 
 	// Retrieving the ID and toTrain
+	ok := checkID(handler, res, req)
+	if !ok {
+		return
+	}
 	id = req.URL.Query().Get("id")
+
+	toTrainString, ok := req.URL.Query()["toTrain"]
+	if !ok || len(toTrainString) != 1 {
+		if !ok {
+			handler.Logger.Info("Error retrieving param toTrain. Returning BadRequest")
+		} else if len(toTrainString) == 0 {
+			handler.Logger.Info("No ID as query params. Returning BadRequest")
+		} else {
+			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
+		}
+		res.WriteHeader(http.StatusBadRequest)
+	}
 	toTrain, err = strconv.ParseBool(req.URL.Query().Get("toTrain"))
 	if err != nil {
+		handler.Logger.Info("Error transforming toTrain from string to bool. Returning Internal Server Error")
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -168,6 +200,11 @@ func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Re
 
 	// Retrieving the ID
 	id = req.URL.Query().Get("id")
+	ok := checkID(handler, res, req)
+	if !ok {
+		return
+	}
+	handler.Logger.Info("ID: " + id)
 
 	// Deleting the new Faq
 	err = handler.KnowledgeBaseInteractor.DeleteFaq(id)
@@ -215,18 +252,11 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 
 	// Retrieving the ID from the url
 	var id string
-	ids, ok := req.URL.Query()["id"]
-	if !ok || len(ids) != 1 {
-		if !ok {
-			handler.Logger.Info("Error retrieving the ID. Returning BadRequest")
-		} else if len(ids) == 0 {
-			handler.Logger.Info("No ID as query params. Returning BadRequest")
-		} else {
-			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
-		}
-		res.WriteHeader(http.StatusBadRequest)
+	ok := checkID(handler, res, req)
+	if !ok {
 		return
 	}
+	ids, ok := req.URL.Query()["id"]
 	id = ids[0]
 
 	// Retrieving the Faq
@@ -263,13 +293,11 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 		return
 	}
 
-	handler.Logger.Info("Transforming the data from usecase Faq to Webservice FaqPreview")
 	var faqs []FaqPreview
 	for _, faq := range faqsUseCase {
 		faqs = append(faqs, FaqPreview{faq.ID, faq.MainExample, faq.IsTrained})
 	}
 	kb := KB{faqs}
-	handler.Logger.Info("Data correctly transformed")
 
 	var body []byte
 	if body, err = json.Marshal(kb); err != nil {
@@ -306,18 +334,11 @@ func (handler WebserviceHandler) UpdateFaq(res http.ResponseWriter, req *http.Re
 
 	// Retrieving the ID from the url
 	var id string
-	ids, ok := req.URL.Query()["id"]
-	if !ok || len(ids) != 1 {
-		if !ok {
-			handler.Logger.Info("Error retrieving the ID. Returning BadRequest")
-		} else if len(ids) == 0 {
-			handler.Logger.Info("No ID as query params. Returning BadRequest")
-		} else {
-			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
-		}
-		res.WriteHeader(http.StatusBadRequest)
+	ok := checkID(handler, res, req)
+	if !ok {
 		return
 	}
+	ids, ok := req.URL.Query()["id"]
 	id = ids[0]
 
 	// Data transformation

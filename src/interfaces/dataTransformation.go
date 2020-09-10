@@ -21,20 +21,19 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 
 	answers := make([]usecases.Answer, len(faq.Answers))
 	for i, ans := range faq.Answers {
-		answers[i] = usecases.Answer{ans.lang, ans.answer}
+		answers[i] = usecases.Answer{Lang: ans.lang, Answer: ans.answer}
 	}
 
 	var trainingExamples []usecases.TrainingExample
 	for k, v := range faq.Examples {
-		trainingExamples = append(trainingExamples, usecases.TrainingExample{k, v})
+		trainingExamples = append(trainingExamples, usecases.TrainingExample{Language: k, Examples: v})
 	}
 
 	return usecases.Faq{
-		"",
-		faq.MainQuestion,
-		answers,
-		faq.Trained,
-		trainingExamples,
+		MainExample:      faq.MainQuestion,
+		Answers:          answers,
+		IsTrained:        faq.Trained,
+		TrainingExamples: trainingExamples,
 	}
 }
 

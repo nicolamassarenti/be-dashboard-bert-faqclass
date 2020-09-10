@@ -61,15 +61,12 @@ type KnowledgeBaseInteractor struct {
 // AddFaq adds a faq
 func (kbInteractor *KnowledgeBaseInteractor) AddFaq(faq Faq) error {
 
-	message := "Adding new faq with id %s"
-	kbInteractor.Logger.Info(fmt.Sprintf(message, faq.ID))
-
 	faqDomain := faqToDomainLayer(faq)
 
 	domainErr := kbInteractor.FaqRepository.AddFaq(faqDomain)
 	if domainErr != nil {
-		message = "Error adding the new faq with id %s"
-		err := fmt.Errorf(message, faq.ID, domainErr.Error())
+		message := "Error adding a new faq. "
+		err := fmt.Errorf(message, domainErr.Error())
 		kbInteractor.Logger.Error(err.Error())
 		return err
 	}
