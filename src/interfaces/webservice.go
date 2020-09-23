@@ -45,7 +45,7 @@ type Faq struct {
 // Answer contains the answer in a language
 type Answer struct {
 	lang   string
-	answer string
+	answer []string
 }
 
 // faqOverview represents the overview of a Faq

@@ -30,7 +30,7 @@ type TrainingExample struct {
 // Answer contains the answer in a language
 type Answer struct {
 	Lang   string
-	Answer string
+	Answer []string
 }
 
 //Logger is the interface that manages the logs
