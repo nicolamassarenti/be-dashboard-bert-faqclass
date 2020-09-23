@@ -4,7 +4,7 @@ import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 )
 
-// faqFromDomainLayer transfroms a FAQ from the struct of domain to the struct of the usecases layer
+// faqFromDomainLayer transforms a FAQ from the struct of domain to the struct of the usecases layer
 func faqFromDomainLayer(faq domain.Faq) Faq {
 	answers := make([]Answer, len(faq.Answers))
 	for i, ans := range faq.Answers {

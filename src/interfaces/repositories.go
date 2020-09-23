@@ -65,7 +65,7 @@ func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
 	langsMap, err := repo.Handler.GetAll(repo.collection)
 
 	langs := make([]usecases.Language, len(langsMap))
-	for idx, lang := range(langsMap){
+	for idx, lang := range langsMap{
 		data, _ := lang["faq"].(map[string]interface{})
 		langs[idx] = mapStringInterfaceToUsecasesLang(data)
 	}
@@ -92,7 +92,7 @@ func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
 		return nil, err
 	}
 
-	// deconding the map to my type `repositoryFaqWithID`
+	// decoding the map to my type `repositoryFaqWithID`
 	mapstructure.Decode(faqs, &repFaqArray)
 
 	var kb []domain.Faq

@@ -17,7 +17,7 @@ type KnowledgeBaseInteractor interface {
 	Update(ID string, faq usecases.Faq) error
 }
 
-// LanguagesInteractor is the interacot that links the webservice to the usecases
+// LanguagesInteractor is the interactor that links the webservice to the usecases
 type LanguagesInteractor interface {
 	GetAllLanguages() ([]usecases.Language, error)
 }
@@ -46,13 +46,6 @@ type Faq struct {
 type Answer struct {
 	lang   string
 	answer []string
-}
-
-// faqOverview represents the overview of a Faq
-type faqOverview struct {
-	ID           string `json:"id,omitempty"`
-	MainQuestion string `json:"mainQuestion,omitempty"`
-	Trained      bool   `trained:"id,omitempty"`
 }
 
 // WebserviceHandler it's the handler for REST api

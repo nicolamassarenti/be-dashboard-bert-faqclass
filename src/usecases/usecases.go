@@ -65,7 +65,7 @@ func (kbInteractor *KnowledgeBaseInteractor) AddFaq(faq Faq) error {
 
 	domainErr := kbInteractor.FaqRepository.AddFaq(faqDomain)
 	if domainErr != nil {
-		message := "Error adding a new faq. "
+		message := "error adding a new faq"
 		err := fmt.Errorf(message, domainErr.Error())
 		kbInteractor.Logger.Error(err.Error())
 		return err
@@ -86,7 +86,7 @@ func (kbInteractor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, new
 	kbInteractor.Logger.Info(fmt.Sprintf("Chaging training status of Faq with ID: %s", ID))
 
 	if domainErr := kbInteractor.FaqRepository.ChangeTrainingStatus(ID, newStatus); domainErr != nil {
-		message := "Error changing the training status of Faq with ID: %s"
+		message := "error changing the training status of Faq with ID: %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())
 		kbInteractor.Logger.Error(err.Error())
 		return err
@@ -140,7 +140,7 @@ func (langInteractor *LanguageInteractor) GetAllLanguages() (langs []Language, e
 
 	langs, err = langInteractor.LanguageRepository.GetAllLanguages()
 	if err != nil {
-		message := "Error retrieving the languages - %s"
+		message := "error retrieving the languages - %s"
 		err = fmt.Errorf(message, err.Error())
 		langInteractor.Logger.Error(err.Error())
 	}
