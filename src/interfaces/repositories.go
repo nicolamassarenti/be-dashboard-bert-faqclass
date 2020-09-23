@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"github.com/mitchellh/mapstructure"
+	"time"
 
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
@@ -15,23 +16,6 @@ type DBHandler interface {
 	Get(collection string, ID string) (map[string]interface{}, error)
 	GetAll(collection string) ([]map[string]interface{}, error)
 	Update(collection string, ID string, data map[string]interface{}) error
-}
-
-type repositoryFaq struct {
-	MainExample      string
-	Answers          []answer
-	IsTrained        bool
-	TrainingExamples []trainingExample
-}
-
-type trainingExample struct {
-	Language string
-	Examples []string
-}
-
-type answer struct {
-	Lang   string
-	Answer string
 }
 
 // repositoryFaqWithID is the Faq retrieved by the repository
@@ -67,6 +51,15 @@ func NewLanguagesDBHandler(dbHandler DBHandler, collection string) *LanguagesHan
 	return languagesHandler
 }
 
+// NewFaqDBHandler creates a new handler for the faq
+func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
+
+	kbHandler := new(KBHandler)
+	kbHandler.Handler = dbHandler
+	kbHandler.collection = collection
+	return kbHandler
+}
+
 // GetAllLanguages returns all the languages
 func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
 	langsMap, err := repo.Handler.GetAll(repo.collection)
@@ -80,13 +73,15 @@ func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
 	return langs, err
 }
 
-// NewFaqDBHandler creates a new handler for the faq
-func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
-
-	kbHandler := new(KBHandler)
-	kbHandler.Handler = dbHandler
-	kbHandler.collection = collection
-	return kbHandler
+// Returns the map[string]interface in the format of the database
+func getFaqMapToAdd(faq domain.Faq) map[string]interface{}{
+	return map[string]interface{}{
+		"MainExample":      faq.MainExample,
+		"Answers":          faq.Answers,
+		"IsTrained":        faq.IsTrained,
+		"TrainingExamples": faq.TrainingExamples,
+		"UpdateDate": 		time.Now().Format("2006-01-02 15:04:05"),
+	}
 }
 
 // KnowledgeBase is the implementation that returns all the faq of the knowledge base
@@ -137,12 +132,7 @@ func (repo *KBHandler) ChangeTrainingStatus(ID string, newStatus bool) error {
 
 // AddFaq adds a new faq
 func (repo *KBHandler) AddFaq(faq domain.Faq) error {
-	faqMap := map[string]interface{}{
-		"MainExample":      faq.MainExample,
-		"Answers":          faq.Answers,
-		"IsTrained":        faq.IsTrained,
-		"TrainingExamples": faq.TrainingExamples,
-	}
+	faqMap := getFaqMapToAdd(faq)
 	return repo.Handler.Add(repo.collection, &faqMap)
 
 }
@@ -154,12 +144,7 @@ func (repo *KBHandler) DeleteFaq(ID string) error {
 
 // AddFaq adds a new faq
 func (repo *KBHandler) Update(ID string, faq domain.Faq) error {
-	faqMap := map[string]interface{}{
-		"MainExample":      faq.MainExample,
-		"Answers":          faq.Answers,
-		"IsTrained":        faq.IsTrained,
-		"TrainingExamples": faq.TrainingExamples,
-	}
+	faqMap := getFaqMapToAdd(faq)
 	return repo.Handler.Update(repo.collection, ID, faqMap)
 
 }
