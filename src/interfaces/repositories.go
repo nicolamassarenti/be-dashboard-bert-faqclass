@@ -80,7 +80,7 @@ func getFaqMapToAdd(faq domain.Faq) map[string]interface{}{
 		"Answers":          faq.Answers,
 		"IsTrained":        faq.IsTrained,
 		"TrainingExamples": faq.TrainingExamples,
-		"UpdateDate": 		time.Now().UTC(),
+		"UpdateDate": 		time.Now().Format(time.RFC3339),
 	}
 }
 
