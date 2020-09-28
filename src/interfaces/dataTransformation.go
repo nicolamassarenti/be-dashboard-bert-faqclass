@@ -5,23 +5,35 @@ import (
 )
 
 func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
-	answers := make([]Answer, len(faq.Answers))
-	for i, ans := range faq.Answers {
-		answers[i] = Answer{ans.Lang, ans.Answer}
+	//answers := make([]Answer, len(faq.Answers))
+	//for i, ans := range faq.Answers {
+	//	answers[i] = Answer{ans.Language, ans.Answers}
+	//}
+
+	answers := make(map[string][]string)
+	for _, ans := range faq.Answers {
+		answers[ans.Language] = ans.Answers
 	}
 
 	trainingExamples := make(map[string][]string)
 	for _, example := range faq.TrainingExamples {
 		trainingExamples[example.Language] = example.Examples
 	}
-	return Faq{faq.MainExample, answers, faq.IsTrained, trainingExamples}
+
+
+	return Faq{
+		MainQuestion: faq.MainExample,
+		Answers: answers,
+		Trained: faq.IsTrained,
+		Examples: trainingExamples,
+	}
 }
 
 func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 
 	answers := make([]usecases.Answer, len(faq.Answers))
-	for i, ans := range faq.Answers {
-		answers[i] = usecases.Answer{Lang: ans.lang, Answer: ans.answer}
+	for k, v := range faq.Answers {
+		answers = append(answers, usecases.Answer{Language: k, Answers: v})
 	}
 
 	var trainingExamples []usecases.TrainingExample

@@ -8,7 +8,7 @@ import (
 func faqFromDomainLayer(faq domain.Faq) Faq {
 	answers := make([]Answer, len(faq.Answers))
 	for i, ans := range faq.Answers {
-		answers[i] = Answer{ans.Lang, ans.Answer}
+		answers[i] = Answer{ans.Language, ans.Answers}
 	}
 
 	trainingExamples := make([]TrainingExample, len(faq.TrainingExamples))
@@ -23,7 +23,7 @@ func faqToDomainLayer(faq Faq) domain.Faq {
 
 	answers := make([]domain.Answer, len(faq.Answers))
 	for i, ans := range faq.Answers {
-		answers[i] = domain.Answer{Lang: ans.Lang, Answer: ans.Answer}
+		answers[i] = domain.Answer{Language: ans.Language, Answers: ans.Answers}
 	}
 
 	trainingExamples := make([]domain.TrainingExample, len(faq.TrainingExamples))

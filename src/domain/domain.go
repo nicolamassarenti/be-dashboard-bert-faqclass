@@ -27,6 +27,6 @@ type TrainingExample struct {
 
 // Answer contains the answer in a language
 type Answer struct {
-	Lang   string
-	Answer []string
+	Language   string
+	Answers []string
 }

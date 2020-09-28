@@ -36,17 +36,17 @@ type FaqPreview struct {
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
 type Faq struct {
-	MainQuestion string              `json:"mainQuestion"`
-	Answers      []Answer            `json:"answers"`
-	Trained      bool                `json:"trained"`
-	Examples     map[string][]string `json:"examples"`
+	MainQuestion string              			`json:"mainQuestion"`
+	Answers      map[string][]string            `json:"answers"`
+	Trained      bool                			`json:"trained"`
+	Examples     map[string][]string 			`json:"examples"`
 }
 
-// Answer contains the answer in a language
-type Answer struct {
-	lang   string
-	answer []string
-}
+//// Answer contains the answer in a language
+//type Answer struct {
+//	Language   string	`json:"lang"`
+//	Answers []string  	`json:"answers"`
+//}
 
 // WebserviceHandler it's the handler for REST api
 type WebserviceHandler struct {

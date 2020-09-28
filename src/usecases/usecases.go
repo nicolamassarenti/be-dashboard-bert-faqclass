@@ -29,8 +29,8 @@ type TrainingExample struct {
 
 // Answer contains the answer in a language
 type Answer struct {
-	Lang   string
-	Answer []string
+	Language   string
+	Answers []string
 }
 
 //Logger is the interface that manages the logs
@@ -112,13 +112,6 @@ func (kbInteractor *KnowledgeBaseInteractor) DeleteFaq(ID string) error {
 // Faq returns a faq with a given ID
 func (kbInteractor *KnowledgeBaseInteractor) Faq(ID string) (Faq, error) {
 	var message string
-
-	if ID == "" {
-		message = "ID not valid - received %s"
-		err := fmt.Errorf(message, ID)
-		kbInteractor.Logger.Error(err.Error())
-		return Faq{}, err
-	}
 
 	message = fmt.Sprintf("Retrieving Faq with ID: %s", ID)
 	kbInteractor.Logger.Info(message)
