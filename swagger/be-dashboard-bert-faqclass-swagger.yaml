@@ -71,13 +71,10 @@ paths:
       responses:
         200:
           description: OK
-          content: {}
         400:
           description: Invalid ID supplied
-          content: {}
         404:
           description: Id not found
-          content: {}
   /kb:
     get:
       tags:
@@ -115,10 +112,8 @@ paths:
                 $ref: '#/components/schemas/faq'
         400:
           description: Invalid ID supplied
-          content: {}
         404:
           description: Id not found
-          content: {}
   
     put:
       tags:
@@ -143,17 +138,11 @@ paths:
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/faq'
         400:
           description: Invalid ID supplied
-          content: {}
         404:
           description: Id not found
-          content: {}
-      x-codegen-request-body-name: body
+          
     delete:
       tags:
       - Knowledge base
@@ -170,13 +159,10 @@ paths:
       responses:
         200:
           description: OK
-          content: {}
         400:
           description: Invalid ID supplied
-          content: {}
         404:
           description: Id not found
-          content: {}
 components:
   schemas:
     kb:
@@ -215,6 +201,39 @@ components:
         trained:
           type: boolean
           example: true
+        answers:
+          type: object
+          properties:
+            it:
+              type: array
+              example:
+              - Answer in italian
+              items:
+                type: string
+            en:
+              type: array
+              example:
+              - Answer in english
+              items:
+                type: string
+            fr:
+              type: array
+              example:
+              - Answer in french
+              items:
+                type: string
+            de:
+              type: array
+              example:
+              - Answer in german
+              items:
+                type: string
+            nl:
+              type: array
+              example:
+              - Answer in dutch
+              items:
+                type: string
         examples:
           type: object
           properties:
