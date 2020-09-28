@@ -30,8 +30,7 @@ func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
 }
 
 func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
-
-	answers := make([]usecases.Answer, len(faq.Answers))
+	var answers []usecases.Answer
 	for k, v := range faq.Answers {
 		answers = append(answers, usecases.Answer{Language: k, Answers: v})
 	}
