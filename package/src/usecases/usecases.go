@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 )
@@ -161,6 +162,7 @@ func (kbInteractor *KnowledgeBaseInteractor) KnowledgeBase() (faqs []Faq, err er
 		faqs[i] = faqFromDomainLayer(faq)
 	}
 
+	kbInteractor.Logger.Info("Retrieved " + strconv.Itoa(len(faqs)) + " faqs")
 	return faqs, nil
 }
 

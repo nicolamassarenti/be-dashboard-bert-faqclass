@@ -1,29 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
-
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 func main() {
-	// Loading ENV variables
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Printf("Error loading .env file")
-		return
-	}
-
 	port := os.Getenv("PORT")
-	projectID := os.Getenv("PROJECT_ID")
+	projectID := "bert-faqclass"
 
 	// Handlers, interfaces and implementation
 	dbHandler := infrastructure.NewFirestoreHandler(projectID)
@@ -50,13 +40,13 @@ func main() {
 		Methods(http.MethodGet)
 
 	rtr.HandleFunc("/api/lang", webserviceHandler.GetAllLanguages).
-		Methods(http.MethodGet)
+		Methods(http.MethodGet, http.MethodOptions)
 
 	rtr.HandleFunc("/api/kb", webserviceHandler.KnowledgeBase).
-		Methods(http.MethodGet)
+		Methods(http.MethodGet, http.MethodOptions)
 
 	rtr.HandleFunc("/api/faq", webserviceHandler.Faq).
-		Methods(http.MethodGet)
+		Methods(http.MethodGet, http.MethodOptions)
 
 	rtr.HandleFunc("/api/faq", webserviceHandler.AddFaq).
 		Methods(http.MethodPost, http.MethodOptions)

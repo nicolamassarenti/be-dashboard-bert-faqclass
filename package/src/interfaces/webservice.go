@@ -74,6 +74,11 @@ func checkID(handler WebserviceHandler, res http.ResponseWriter, req *http.Reque
 func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == "OPTIONS" {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+	}
+
 	body, err := json.Marshal("I am alive")
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -95,6 +100,7 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 
 	res.Header().Set("Access-Control-Allow-Origin", "*")
 	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -130,6 +136,7 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 
 	res.Header().Set("Access-Control-Allow-Origin", "*")
 	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -184,6 +191,7 @@ func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Re
 
 	res.Header().Set("Access-Control-Allow-Origin", "*")
 	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -216,6 +224,12 @@ func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Re
 func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+		return
+	}
+
 	languages, err := handler.LanguagesInteractor.GetAllLanguages()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -242,6 +256,12 @@ func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *h
 // Faq is the handler function that returns a Faq
 func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+		return
+	}
 
 	// Retrieving the ID from the url
 	var id string
@@ -280,6 +300,12 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+		return
+	}
+
 	faqsUseCase, err := handler.KnowledgeBaseInteractor.KnowledgeBase()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -312,6 +338,7 @@ func (handler WebserviceHandler) UpdateFaq(res http.ResponseWriter, req *http.Re
 
 	res.Header().Set("Access-Control-Allow-Origin", "*")
 	if req.Method == http.MethodOptions {
+		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
