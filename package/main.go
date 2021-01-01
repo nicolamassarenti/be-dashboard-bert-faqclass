@@ -13,7 +13,7 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
-	projectID := "bert-faqclass"
+	projectID := "PROJECT_ID"
 
 	// Handlers, interfaces and implementation
 	dbHandler := infrastructure.NewFirestoreHandler(projectID)
