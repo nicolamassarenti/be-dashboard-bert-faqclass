@@ -74,10 +74,13 @@ func checkID(handler WebserviceHandler, res http.ResponseWriter, req *http.Reque
 func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
-	if req.Method == "OPTIONS" {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+	if req.Method == http.MethodOptions {
+		return
 	}
+
 
 	body, err := json.Marshal("I am alive")
 	if err != nil {
@@ -98,9 +101,10 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -134,9 +138,10 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -189,9 +194,10 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -224,9 +230,10 @@ func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Re
 func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -257,9 +264,10 @@ func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *h
 func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -300,9 +308,10 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
@@ -336,9 +345,10 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 func (handler WebserviceHandler) UpdateFaq(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
+	// Setting headers for CORS
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	if req.Method == http.MethodOptions {
-		res.Header().Set("Access-Control-Allow-Headers", "Authorization")
 		return
 	}
 
