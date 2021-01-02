@@ -64,7 +64,6 @@ func main() {
 
 	logger.Info("Router and handler function created")
 
-	rtr.Use(mux.CORSMethodMiddleware(rtr))
 	// Server
 	logger.Info("Server starting at port " + port)
 	log.Fatal(http.ListenAndServe(":"+port, rtr))
