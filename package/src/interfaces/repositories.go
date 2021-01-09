@@ -36,8 +36,17 @@ type FaqDBRepo struct {
 	collection string
 }
 
+// KeywordDBRepo is the object that manages the operations with the keywords
+type KeywordDBRepo struct {
+	Handler DBHandler
+	collection string
+}
+
 // KBHandler is the handler for the FAQ
 type KBHandler FaqDBRepo
+
+// KeywordHandler is the handler for the Keywords
+type KeywordsHandler KeywordDBRepo
 
 // LanguagesHandler is the handler for tha languages
 type LanguagesHandler LanguageDBRepo
@@ -80,6 +89,14 @@ func getFaqMapToAdd(faq domain.Faq) map[string]interface{}{
 		"Answers":          faq.Answers,
 		"IsTrained":        faq.IsTrained,
 		"TrainingExamples": faq.TrainingExamples,
+		"UpdateDate": 		time.Now().Format(time.RFC3339),
+	}
+}
+
+// Retruns the map[string]interface formatted as requested by the database
+func getKeywordMapToAdd(keyword domain.Keyword) map[string]interface{}{
+	return map[string]interface{}{
+		"Name": keyword.Name,
 		"UpdateDate": 		time.Now().Format(time.RFC3339),
 	}
 }
@@ -147,4 +164,10 @@ func (repo *KBHandler) Update(ID string, faq domain.Faq) error {
 	faqMap := getFaqMapToAdd(faq)
 	return repo.Handler.Update(repo.collection, ID, faqMap)
 
+}
+
+// AddKeyword adds a new keyword
+func (repo *KeywordsHandler) AddKeyword(keyword domain.Keyword) error {
+	keywordMap := getKeywordMapToAdd(keyword)
+	return repo.Handler.Add(repo.collection, &keywordMap)
 }
