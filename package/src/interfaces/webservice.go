@@ -25,6 +25,7 @@ type LanguagesInteractor interface {
 // KeywordsInteractor is the interactor that links the webservice to the usecases
 type KeywordsInteractor interface {
 	AddKeyword(usecases.Keyword) error
+	DeleteKeyword(ID string) error
 }
 
 // KB is the struct that contains the preview of all the KB
@@ -419,6 +420,42 @@ func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.R
 
 	// Adding the new Faq
 	err = handler.KeywordsInteractor.AddKeyword(usecaseKeyword)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Preparing the response
+	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
+	return
+}
+
+// DeleteKeyword is the handler function that deletes a keyword
+func (handler WebserviceHandler) DeleteKeyword(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	// Setting headers for CORS
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
+	// Retrieving the ID from the url
+	var id string
+	var err error
+
+	// Retrieving the ID
+	id = req.URL.Query().Get("id")
+	ok := checkID(handler, res, req)
+	if !ok {
+		return
+	}
+	handler.Logger.Info("ID: " + id)
+
+	// Deleting the new Faq
+	err = handler.KeywordsInteractor.DeleteKeyword(id)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return

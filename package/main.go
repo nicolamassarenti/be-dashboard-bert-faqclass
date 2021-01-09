@@ -74,6 +74,9 @@ func main() {
 	rtr.HandleFunc("/api/keyword", webserviceHandler.AddKeyword).
 		Methods(http.MethodPost, http.MethodOptions)
 
+	rtr.HandleFunc("/api/keyword", webserviceHandler.DeleteKeyword).
+		Methods(http.MethodDelete, http.MethodOptions)
+
 	http.Handle("/", rtr)
 
 	logger.Info("Router and handler function created")
