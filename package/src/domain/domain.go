@@ -30,3 +30,9 @@ type Answer struct {
 	Language   string
 	Answers []string
 }
+
+// Keyword is a keyword
+type Keyword struct {
+	ID string
+	Name string
+}
