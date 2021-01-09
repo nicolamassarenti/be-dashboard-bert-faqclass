@@ -22,6 +22,12 @@ type Faq struct {
 	TrainingExamples []TrainingExample
 }
 
+// Keyword is a keyword
+type Keyword struct {
+	ID string
+	Name string
+}
+
 // TrainingExample contain the training examples of a specific language
 type TrainingExample struct {
 	Language string
