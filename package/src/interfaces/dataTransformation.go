@@ -5,10 +5,6 @@ import (
 )
 
 func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
-	//answers := make([]Answer, len(faq.Answers))
-	//for i, ans := range faq.Answers {
-	//	answers[i] = Answer{ans.Language, ans.Answers}
-	//}
 
 	answers := make(map[string][]string)
 	for _, ans := range faq.Answers {
@@ -26,6 +22,12 @@ func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
 		Answers: answers,
 		Trained: faq.IsTrained,
 		Examples: trainingExamples,
+	}
+}
+
+func webserviceKeywordToUsecaseKeyword(keyword Keyword) usecases.Keyword {
+	return usecases.Keyword{
+		Name: keyword.Name,
 	}
 }
 

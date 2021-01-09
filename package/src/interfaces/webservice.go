@@ -22,6 +22,11 @@ type LanguagesInteractor interface {
 	GetAllLanguages() ([]usecases.Language, error)
 }
 
+// KeywordsInteractor is the interactor that links the webservice to the usecases
+type KeywordsInteractor interface {
+	AddKeyword(usecases.Keyword) error
+}
+
 // KB is the struct that contains the preview of all the KB
 type KB struct {
 	KB []FaqPreview `json:"kb,omitempty"`
@@ -34,6 +39,12 @@ type FaqPreview struct {
 	Trained      bool   `json:"trained"`
 }
 
+// Keyword is a keyword
+type Keyword struct {
+	ID string
+	Name string
+}
+
 // Faq contains the data that define a F.A.Q, in the format required by the UI
 type Faq struct {
 	MainQuestion string              			`json:"mainQuestion"`
@@ -42,16 +53,11 @@ type Faq struct {
 	Examples     map[string][]string 			`json:"examples"`
 }
 
-//// Answer contains the answer in a language
-//type Answer struct {
-//	Language   string	`json:"lang"`
-//	Answers []string  	`json:"answers"`
-//}
-
 // WebserviceHandler it's the handler for REST api
 type WebserviceHandler struct {
 	KnowledgeBaseInteractor KnowledgeBaseInteractor
 	LanguagesInteractor     LanguagesInteractor
+	KeywordsInteractor 		KeywordsInteractor
 	Logger                  usecases.Logger
 }
 
@@ -376,6 +382,43 @@ func (handler WebserviceHandler) UpdateFaq(res http.ResponseWriter, req *http.Re
 
 	// Adding the new Faq
 	err = handler.KnowledgeBaseInteractor.Update(id, usecasesFaq)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Preparing the response
+	res.WriteHeader(200)
+	handler.Logger.Info("Returning response")
+	return
+}
+
+// AddKeyword is the handler function that adds a keyword
+func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.Request){
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	// Setting headers for CORS
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
+	var err error
+	var newKeyword Keyword
+
+	// Parsing the request body
+	err = json.NewDecoder(req.Body).Decode(&newKeyword)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Data transformation
+	usecaseKeyword := webserviceKeywordToUsecaseKeyword(newKeyword)
+
+	// Adding the new Faq
+	err = handler.KeywordsInteractor.AddKeyword(usecaseKeyword)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
