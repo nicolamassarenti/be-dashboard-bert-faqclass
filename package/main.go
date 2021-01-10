@@ -36,6 +36,7 @@ func main() {
 	webserviceHandler := webservice.WebserviceHandler{}
 	webserviceHandler.KnowledgeBaseInteractor = kbInteractor
 	webserviceHandler.LanguagesInteractor = langInteractor
+	webserviceHandler.KeywordsInteractor = keywordsInteractor
 	webserviceHandler.Logger = logger
 
 	logger.Info("Handlers created")
@@ -82,6 +83,12 @@ func main() {
 
 	rtr.HandleFunc("/api/keyword", webserviceHandler.DeleteKeyword).
 		Methods(http.MethodDelete, http.MethodOptions)
+
+	rtr.HandleFunc("/api/keyword", webserviceHandler.GetKeywords).
+		Methods(http.MethodGet, http.MethodOptions)
+
+	rtr.HandleFunc("/api/keyword", webserviceHandler.UpdateKeyword).
+		Methods(http.MethodPut, http.MethodOptions)
 
 	http.Handle("/", rtr)
 

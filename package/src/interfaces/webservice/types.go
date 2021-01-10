@@ -26,7 +26,6 @@ type KeywordsInteractor interface {
 	Add(usecases.Keyword) error
 	Delete(ID string) error
 	Update(ID string, keyword usecases.Keyword) error
-	Keyword(ID string) (usecases.Keyword, error)
 	Keywords() ([]usecases.Keyword, error)
 }
 

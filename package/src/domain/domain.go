@@ -14,7 +14,6 @@ type FaqRepository interface {
 type KeywordRepository interface {
 	Add(keyword Keyword) error
 	Delete(ID string) error
-	Keyword(ID string) (Keyword, error)
 	Keywords() ([]Keyword, error)
 	Update(ID string, keyword Keyword) error
 }

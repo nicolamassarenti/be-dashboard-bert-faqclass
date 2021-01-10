@@ -16,17 +16,6 @@ func (repo *KeywordsHandler) Delete(ID string) error {
 	return repo.Handler.Delete(repo.collection, ID)
 }
 
-func (repo *KeywordsHandler) Keyword(ID string) (keyword domain.Keyword, err error) {
-
-	keywordMap, err := repo.Handler.Get(repo.collection, ID)
-	if err != nil {
-		return
-	}
-
-	err = mapstructure.Decode(keywordMap, &keyword)
-	return
-}
-
 func (repo *KeywordsHandler) Keywords() (keywords []domain.Keyword, err error) {
 	var repFaqArray []repositoryKeywordWithID
 	faqs, err := repo.Handler.GetAll(repo.collection)
