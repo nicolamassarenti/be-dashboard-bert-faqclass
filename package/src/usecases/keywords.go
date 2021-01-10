@@ -3,6 +3,7 @@ package usecases
 import (
 	"fmt"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
+	"strconv"
 )
 
 // Add adds a keyword
@@ -53,4 +54,47 @@ func (interactor *KeywordsInteractor) Delete(ID string) error {
 		return err
 	}
 	return nil
+}
+
+// Faq returns a faq with a given ID
+func (interactor *KeywordsInteractor) Keyword(ID string) (Keyword, error) {
+	var message string
+
+	message = fmt.Sprintf("Retrieving Faq with ID: %s", ID)
+	interactor.Logger.Info(message)
+
+	keyword, domainErr := interactor.Repository.Keyword(ID)
+	if domainErr != nil {
+		message = "Error retrieving the Faq with ID: %s - %s"
+		err := fmt.Errorf(message, ID, domainErr.Error())
+		interactor.Logger.Error(err.Error())
+		return Keyword{}, err
+	}
+
+	return Keyword{Name: keyword.Name, ID: keyword.ID}, nil
+}
+
+// KnowledgeBase returns all the knowledge base, all the faqs
+func (interactor *KeywordsInteractor) Keywords() (keywords []Keyword, err error) {
+	var message string
+
+	interactor.Logger.Info("Retrieving the KB")
+	allKeywords, domainErr := interactor.Repository.Keywords()
+
+	if domainErr != nil {
+		message = "Error retrieving the KB - %s"
+		err = fmt.Errorf(message, domainErr.Error())
+		interactor.Logger.Error(err.Error())
+		return nil, domainErr
+	}
+
+	keywords = make([]Keyword, len(allKeywords))
+
+	// Transforming the KB from domain struct to usecase struct
+	for i, item := range allKeywords {
+		keywords[i] = Keyword{ID: item.ID, Name: item.Name}
+	}
+
+	interactor.Logger.Info("Retrieved " + strconv.Itoa(len(keywords)) + " faqs")
+	return keywords, nil
 }
