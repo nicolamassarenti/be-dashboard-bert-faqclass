@@ -18,10 +18,10 @@ func main() {
 	// Handlers, interfaces and implementation
 	dbHandler := infrastructure.NewFirestoreHandler(projectID)
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
-	kbInteractor.FaqRepository = interfaces.NewFaqDBHandler(dbHandler, "KnowledgeBase")
+	kbInteractor.Repository = interfaces.NewFaqDBHandler(dbHandler, "KnowledgeBase")
 
 	langInteractor := new(usecases.LanguageInteractor)
-	langInteractor.LanguageRepository = interfaces.NewLanguagesDBHandler(dbHandler, "Languages")
+	langInteractor.Repository = interfaces.NewLanguagesDBHandler(dbHandler, "Languages")
 
 	logger := infrastructure.NewLogger()
 	kbInteractor.Logger = logger
