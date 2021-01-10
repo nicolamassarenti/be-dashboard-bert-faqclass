@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/repositories"
 	"log"
 	"net/http"
 	"os"
@@ -18,10 +19,10 @@ func main() {
 	// Handlers, interfaces and implementation
 	dbHandler := infrastructure.NewFirestoreHandler(projectID)
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
-	kbInteractor.Repository = interfaces.NewFaqDBHandler(dbHandler, "KnowledgeBase")
+	kbInteractor.Repository = repositories.NewFaqDBHandler(dbHandler, "KnowledgeBase")
 
 	langInteractor := new(usecases.LanguageInteractor)
-	langInteractor.Repository = interfaces.NewLanguagesDBHandler(dbHandler, "Languages")
+	langInteractor.Repository = repositories.NewLanguagesDBHandler(dbHandler, "Languages")
 
 	logger := infrastructure.NewLogger()
 	kbInteractor.Logger = logger

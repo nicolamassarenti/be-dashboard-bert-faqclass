@@ -57,10 +57,3 @@ func languagesToFrontEnd(langs []usecases.Language) map[string]string {
 	}
 	return result
 }
-
-func mapStringInterfaceToUsecasesLang(langMap map[string]interface{}) usecases.Language {
-	return usecases.Language{
-		IsoName: langMap["IsoName"].(string),
-		DisplayName: langMap["DisplayName"].(string),
-	}
-}
