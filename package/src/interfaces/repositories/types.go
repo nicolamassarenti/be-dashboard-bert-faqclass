@@ -20,6 +20,12 @@ type repositoryFaqWithID struct {
 	Faq domain.Faq `json:"Faq,omitempty"`
 }
 
+// repositoryKeywordWithID is the Keyword retrieved by the repository
+type repositoryKeywordWithID struct {
+	ID  string     `json:"ID,omitempty"`
+	Keyword domain.Keyword `json:"Keyword,omitempty"`
+}
+
 // LanguageDBRepo is the object for the languages db handler
 type LanguageDBRepo struct {
 	Handler    DBHandler
@@ -63,4 +69,13 @@ func NewFaqDBHandler(dbHandler DBHandler, collection string) *KBHandler {
 	kbHandler.Handler = dbHandler
 	kbHandler.collection = collection
 	return kbHandler
+}
+
+// NewKeywordsDBHandler creates a new handler for the keywords
+func NewKeywordsDBHandler(dbHandler DBHandler, collection string) *KeywordsHandler {
+
+	keywordsHandler := new(KeywordsHandler)
+	keywordsHandler.Handler = dbHandler
+	keywordsHandler.collection = collection
+	return keywordsHandler
 }

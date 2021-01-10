@@ -14,7 +14,10 @@ func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
 	}
 
 	// decoding the map to my type `repositoryFaqWithID`
-	mapstructure.Decode(faqs, &repFaqArray)
+	err = mapstructure.Decode(faqs, &repFaqArray)
+	if err != nil {
+		return nil, err
+	}
 
 	var kb []domain.Faq
 	for _, repFaq := range repFaqArray {
@@ -41,7 +44,7 @@ func (repo *KBHandler) Faq(ID string) (faq domain.Faq, err error) {
 		return
 	}
 
-	mapstructure.Decode(faqMap, &faq)
+	err = mapstructure.Decode(faqMap, &faq)
 	return
 }
 
@@ -67,5 +70,4 @@ func (repo *KBHandler) DeleteFaq(ID string) error {
 func (repo *KBHandler) Update(ID string, faq domain.Faq) error {
 	faqMap := getFaqMapToAdd(faq)
 	return repo.Handler.Update(repo.collection, ID, faqMap)
-
 }

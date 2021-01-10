@@ -25,6 +25,9 @@ func main() {
 	langInteractor := new(usecases.LanguageInteractor)
 	langInteractor.Repository = repositories.NewLanguagesDBHandler(dbHandler, "Languages")
 
+	keywordsInteractor := new(usecases.KeywordsInteractor)
+	keywordsInteractor.Repository = repositories.NewKeywordsDBHandler(dbHandler, "keywords")
+
 	logger := logging.NewLogger()
 	kbInteractor.Logger = logger
 	langInteractor.Logger = logger
