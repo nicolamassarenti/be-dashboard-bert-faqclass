@@ -48,7 +48,7 @@ func (handler *DBHandler) ChangeBool(collection string, ID, path string, value b
 	return err
 }
 
-// Delete deletes an Faq
+// Delete deletes an Data
 func (handler *DBHandler) Delete(collection string, ID string) error {
 	_, err := handler.Client.Doc(collection + "/" + ID).Delete(handler.Context)
 
@@ -84,14 +84,14 @@ func (handler *DBHandler) GetAll(collection string) ([]map[string]interface{}, e
 
 		faqs = append(faqs, map[string]interface{}{
 			"ID":  doc.Ref.ID,
-			"faq": doc.Data(),
+			"data": doc.Data(),
 		})
 	}
 
 	return faqs, nil
 }
 
-// Update updates a Faq
+// Update updates a Data
 func (handler *DBHandler) Update(collection string, ID string, data map[string]interface{}) error {
 	_, err := handler.Client.Doc(collection + "/" + ID).Set(handler.Context, data)
 

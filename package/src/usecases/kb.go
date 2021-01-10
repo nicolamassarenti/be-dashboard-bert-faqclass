@@ -30,10 +30,10 @@ func (interactor *KnowledgeBaseInteractor) ChangeTrainingStatus(ID string, newSt
 		return err
 	}
 
-	interactor.Logger.Info(fmt.Sprintf("Chaging training status of Faq with ID: %s", ID))
+	interactor.Logger.Info(fmt.Sprintf("Chaging training status of Data with ID: %s", ID))
 
 	if domainErr := interactor.Repository.ChangeTrainingStatus(ID, newStatus); domainErr != nil {
-		message := "error changing the training status of Faq with ID: %s"
+		message := "error changing the training status of Data with ID: %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())
 		interactor.Logger.Error(err.Error())
 		return err
@@ -60,12 +60,12 @@ func (interactor *KnowledgeBaseInteractor) DeleteFaq(ID string) error {
 func (interactor *KnowledgeBaseInteractor) Faq(ID string) (Faq, error) {
 	var message string
 
-	message = fmt.Sprintf("Retrieving Faq with ID: %s", ID)
+	message = fmt.Sprintf("Retrieving Data with ID: %s", ID)
 	interactor.Logger.Info(message)
 
 	faq, domainErr := interactor.Repository.Faq(ID)
 	if domainErr != nil {
-		message = "Error retrieving the Faq with ID: %s - %s"
+		message = "Error retrieving the Data with ID: %s - %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())
 		interactor.Logger.Error(err.Error())
 		return Faq{}, err

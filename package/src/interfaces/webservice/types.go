@@ -43,8 +43,8 @@ type FaqPreview struct {
 
 // Keyword is a keyword
 type Keyword struct {
-	ID string
-	Name string
+	ID          string
+	DisplayText string
 }
 
 type Keywords struct {
@@ -102,7 +102,10 @@ func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Reques
 	res.Header().Add("Content-Type", "application/json")
 
 	res.WriteHeader(200)
-	res.Write(body)
+	_, err = res.Write(body)
+	if err != nil {
+		return
+	}
 
 	handler.Logger.Debug("Response set-up, returning the request")
 	handler.Logger.Info("Returning response")

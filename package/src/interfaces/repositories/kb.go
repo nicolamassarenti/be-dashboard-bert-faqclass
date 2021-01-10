@@ -25,10 +25,10 @@ func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
 			kb,
 			domain.Faq{
 				ID:               repFaq.ID,
-				MainExample:      repFaq.Faq.MainExample,
-				Answers:          repFaq.Faq.Answers,
-				IsTrained:        repFaq.Faq.IsTrained,
-				TrainingExamples: repFaq.Faq.TrainingExamples,
+				MainExample:      repFaq.Data.MainExample,
+				Answers:          repFaq.Data.Answers,
+				IsTrained:        repFaq.Data.IsTrained,
+				TrainingExamples: repFaq.Data.TrainingExamples,
 			},
 		)
 	}

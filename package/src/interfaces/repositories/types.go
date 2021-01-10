@@ -14,16 +14,16 @@ type DBHandler interface {
 	Update(collection string, ID string, data map[string]interface{}) error
 }
 
-// repositoryFaqWithID is the Faq retrieved by the repository
+// repositoryFaqWithID is the Data retrieved by the repository
 type repositoryFaqWithID struct {
-	ID  string     `json:"ID,omitempty"`
-	Faq domain.Faq `json:"Faq,omitempty"`
+	ID   string     `json:"ID,omitempty"`
+	Data domain.Faq `json:"data,omitempty"`
 }
 
-// repositoryKeywordWithID is the Keyword retrieved by the repository
+// repositoryKeywordWithID is the Data retrieved by the repository
 type repositoryKeywordWithID struct {
-	ID  string     `json:"ID,omitempty"`
-	Keyword domain.Keyword `json:"Keyword,omitempty"`
+	ID   string         `json:"ID,omitempty"`
+	Data domain.Keyword `json:"Data,omitempty"`
 }
 
 // LanguageDBRepo is the object for the languages db handler

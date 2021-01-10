@@ -29,7 +29,7 @@ func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.R
 	// Data transformation
 	usecaseKeyword := webserviceKeywordToUsecaseKeyword(newKeyword)
 
-	// Adding the new Faq
+	// Adding the new Data
 	err = handler.KeywordsInteractor.Add(usecaseKeyword)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -65,7 +65,7 @@ func (handler WebserviceHandler) DeleteKeyword(res http.ResponseWriter, req *htt
 	}
 	handler.Logger.Info("ID: " + id)
 
-	// Deleting the new Faq
+	// Deleting the new Data
 	err = handler.KeywordsInteractor.Delete(id)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -111,7 +111,7 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 	// Data transformation
 	usecasesKeyword := webserviceKeywordToUsecaseKeyword(updatedKeyword)
 
-	// Adding the new Faq
+	// Adding the new Data
 	err = handler.KeywordsInteractor.Update(id, usecasesKeyword)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -143,7 +143,7 @@ func (handler WebserviceHandler) GetKeywords(res http.ResponseWriter, req *http.
 
 	var keywords []Keyword
 	for _, keyword := range keywordsUseCase {
-		keywords = append(keywords, Keyword{keyword.ID, keyword.Name})
+		keywords = append(keywords, Keyword{keyword.ID, keyword.DisplayText})
 	}
 	kb := Keywords{keywords}
 

@@ -4,7 +4,7 @@ import "github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 
 func webserviceKeywordToUsecaseKeyword(keyword Keyword) usecases.Keyword {
 	return usecases.Keyword{
-		Name: keyword.Name,
+		DisplayText: keyword.DisplayText,
 	}
 }
 

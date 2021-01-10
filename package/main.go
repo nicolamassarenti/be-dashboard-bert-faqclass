@@ -27,11 +27,12 @@ func main() {
 	langInteractor.Repository = repositories.NewLanguagesDBHandler(dbHandler, "Languages")
 
 	keywordsInteractor := new(usecases.KeywordsInteractor)
-	keywordsInteractor.Repository = repositories.NewKeywordsDBHandler(dbHandler, "keywords")
+	keywordsInteractor.Repository = repositories.NewKeywordsDBHandler(dbHandler, "Keywords")
 
 	logger := logging.NewLogger()
 	kbInteractor.Logger = logger
 	langInteractor.Logger = logger
+	keywordsInteractor.Logger = logger
 
 	webserviceHandler := webservice.WebserviceHandler{}
 	webserviceHandler.KnowledgeBaseInteractor = kbInteractor

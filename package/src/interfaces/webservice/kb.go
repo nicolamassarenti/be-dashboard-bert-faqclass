@@ -30,7 +30,7 @@ func (handler WebserviceHandler) AddFaq(res http.ResponseWriter, req *http.Reque
 	// Data transformation
 	usecasesFaq := webserviceFaqToUsecaseFaq(newFaq)
 
-	// Adding the new Faq
+	// Adding the new Data
 	err = handler.KnowledgeBaseInteractor.AddFaq(usecasesFaq)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -86,7 +86,7 @@ func (handler WebserviceHandler) ChangeTrainingStatus(res http.ResponseWriter, r
 
 	handler.Logger.Info("ID: " + id + "\ttoTrain: " + strconv.FormatBool(toTrain))
 
-	// Retrieving the Faq
+	// Retrieving the Data
 	err = handler.KnowledgeBaseInteractor.ChangeTrainingStatus(id, toTrain)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -122,7 +122,7 @@ func (handler WebserviceHandler) DeleteFaq(res http.ResponseWriter, req *http.Re
 	}
 	handler.Logger.Info("ID: " + id)
 
-	// Deleting the new Faq
+	// Deleting the new Data
 	err = handler.KnowledgeBaseInteractor.DeleteFaq(id)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -155,7 +155,7 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 	ids, ok := req.URL.Query()["id"]
 	id = ids[0]
 
-	// Retrieving the Faq
+	// Retrieving the Data
 	usecaseFaq, err := handler.KnowledgeBaseInteractor.Faq(id)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -255,7 +255,7 @@ func (handler WebserviceHandler) UpdateFaq(res http.ResponseWriter, req *http.Re
 	// Data transformation
 	usecasesFaq := webserviceFaqToUsecaseFaq(updatedFaq)
 
-	// Adding the new Faq
+	// Adding the new Data
 	err = handler.KnowledgeBaseInteractor.Update(id, usecasesFaq)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)

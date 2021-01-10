@@ -10,7 +10,7 @@ import (
 func (interactor *KeywordsInteractor) Add(keyword Keyword) error {
 
 	var keywordDomain domain.Keyword
-	keywordDomain.Name = keyword.Name
+	keywordDomain.DisplayText = keyword.DisplayText
 
 	domainErr := interactor.Repository.Add(keywordDomain)
 	if domainErr != nil {
@@ -28,7 +28,7 @@ func (interactor *KeywordsInteractor) Update(ID string, keyword Keyword) error {
 	interactor.Logger.Info(fmt.Sprintf(message, ID))
 
 	var keywordDomain domain.Keyword
-	keywordDomain.Name = keyword.Name
+	keywordDomain.DisplayText = keyword.DisplayText
 	keywordDomain.ID = keyword.ID
 
 	domainErr := interactor.Repository.Update(ID, keywordDomain)
@@ -74,9 +74,9 @@ func (interactor *KeywordsInteractor) Keywords() (keywords []Keyword, err error)
 
 	// Transforming the KB from domain struct to usecase struct
 	for i, item := range allKeywords {
-		keywords[i] = Keyword{ID: item.ID, Name: item.Name}
+		keywords[i] = Keyword{ID: item.ID, DisplayText: item.DisplayText}
 	}
 
-	interactor.Logger.Info("Retrieved " + strconv.Itoa(len(keywords)) + " faqs")
+	interactor.Logger.Info("Retrieved " + strconv.Itoa(len(keywords)) + " keywords")
 	return keywords, nil
 }

@@ -17,24 +17,24 @@ func (repo *KeywordsHandler) Delete(ID string) error {
 }
 
 func (repo *KeywordsHandler) Keywords() (keywords []domain.Keyword, err error) {
-	var repFaqArray []repositoryKeywordWithID
-	faqs, err := repo.Handler.GetAll(repo.collection)
+	var repListArray []repositoryKeywordWithID
+	keywordsList, err := repo.Handler.GetAll(repo.collection)
 	if err != nil {
 		return nil, err
 	}
 
 	// decoding the map to my type `repositoryFaqWithID`
-	err = mapstructure.Decode(faqs, &repFaqArray)
+	err = mapstructure.Decode(keywordsList, &repListArray)
 	if err != nil{
 		return nil, err
 	}
 
-	for _, repKeyword := range repFaqArray {
+	for _, repKeyword := range repListArray {
 		keywords = append(
 			keywords,
 			domain.Keyword{
-				ID:               repKeyword.ID,
-				Name:      			repKeyword.Keyword.Name,
+				ID:          repKeyword.ID,
+				DisplayText: repKeyword.Data.DisplayText,
 			},
 		)
 	}

@@ -21,8 +21,8 @@ type Faq struct {
 
 // Keyword is a keyword
 type Keyword struct {
-	ID string
-	Name string
+	ID          string
+	DisplayText string
 }
 
 // TrainingExample contain the training examples of a specific language

@@ -41,6 +41,6 @@ type Answer struct {
 
 // Keyword is a keyword
 type Keyword struct {
-	ID string
-	Name string
+	ID          string
+	DisplayText string
 }
