@@ -10,6 +10,15 @@ type FaqRepository interface {
 	Update(ID string, faq Faq) error
 }
 
+// KeywordRepository is the interface
+type KeywordRepository interface {
+	Add(keyword Keyword) error
+	Delete(ID string) error
+	Keyword(ID string) (Keyword, error)
+	Keywords() ([]Keyword, error)
+	Update(ID string, keyword Keyword) error
+}
+
 // Faq contains the data that define a F.A.Q.
 type Faq struct {
 	ID               string
