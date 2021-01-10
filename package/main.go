@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure/db"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure/logging"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/repositories"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/webservice"
 	"log"
@@ -9,7 +10,6 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
@@ -25,7 +25,7 @@ func main() {
 	langInteractor := new(usecases.LanguageInteractor)
 	langInteractor.Repository = repositories.NewLanguagesDBHandler(dbHandler, "Languages")
 
-	logger := infrastructure.NewLogger()
+	logger := logging.NewLogger()
 	kbInteractor.Logger = logger
 	langInteractor.Logger = logger
 
