@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure/db"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/repositories"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/webservice"
 	"log"
@@ -17,7 +18,7 @@ func main() {
 	projectID := "PROJECT_ID"
 
 	// Handlers, interfaces and implementation
-	dbHandler := infrastructure.NewFirestoreHandler(projectID)
+	dbHandler := db.Handler(projectID)
 	kbInteractor := new(usecases.KnowledgeBaseInteractor)
 	kbInteractor.Repository = repositories.NewFaqDBHandler(dbHandler, "KnowledgeBase")
 

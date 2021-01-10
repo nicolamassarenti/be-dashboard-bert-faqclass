@@ -1,4 +1,4 @@
-package infrastructure
+package db
 
 import (
 	"context"
@@ -8,14 +8,14 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-// FirestoreHandler is the struct that has the client to firestore
-type FirestoreHandler struct {
+// DBHandler is the struct that has the client to firestore
+type DBHandler struct {
 	Client  *firestore.Client
 	Context context.Context
 }
 
-// NewFirestoreHandler creates a new firestore handler, with a client
-func NewFirestoreHandler(projectID string) *FirestoreHandler {
+// Handler creates a new firestore handler, with a client
+func Handler(projectID string) *DBHandler {
 	// Get a Firestore client.
 	ctx := context.Background()
 
@@ -24,7 +24,7 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	firestoreHandler := new(FirestoreHandler)
+	firestoreHandler := new(DBHandler)
 	firestoreHandler.Client = client
 	firestoreHandler.Context = ctx
 
@@ -32,7 +32,7 @@ func NewFirestoreHandler(projectID string) *FirestoreHandler {
 }
 
 // Add adds a new faq
-func (handler *FirestoreHandler) Add(collection string, data *map[string]interface{}) error {
+func (handler *DBHandler) Add(collection string, data *map[string]interface{}) error {
 
 	_, _, err := handler.Client.Collection(collection).Add(handler.Context, data)
 
@@ -40,7 +40,7 @@ func (handler *FirestoreHandler) Add(collection string, data *map[string]interfa
 }
 
 // ChangeBool changes the bool value of a document
-func (handler *FirestoreHandler) ChangeBool(collection string, ID, path string, value bool) error {
+func (handler *DBHandler) ChangeBool(collection string, ID, path string, value bool) error {
 	_, err := handler.Client.Doc(collection+"/"+ID).Update(handler.Context, []firestore.Update{
 		{Path: path, Value: value},
 	})
@@ -49,14 +49,14 @@ func (handler *FirestoreHandler) ChangeBool(collection string, ID, path string, 
 }
 
 // Delete deletes an Faq
-func (handler *FirestoreHandler) Delete(collection string, ID string) error {
+func (handler *DBHandler) Delete(collection string, ID string) error {
 	_, err := handler.Client.Doc(collection + "/" + ID).Delete(handler.Context)
 
 	return err
 }
 
 // Get returns a specific faq
-func (handler *FirestoreHandler) Get(collection string, ID string) (map[string]interface{}, error) {
+func (handler *DBHandler) Get(collection string, ID string) (map[string]interface{}, error) {
 
 	doc, err := handler.Client.Doc(collection + "/" + ID).Get(handler.Context)
 
@@ -68,7 +68,7 @@ func (handler *FirestoreHandler) Get(collection string, ID string) (map[string]i
 }
 
 // GetAll returns all the documents of a collection
-func (handler *FirestoreHandler) GetAll(collection string) ([]map[string]interface{}, error) {
+func (handler *DBHandler) GetAll(collection string) ([]map[string]interface{}, error) {
 	iter := handler.Client.Collection(collection).Documents(handler.Context)
 
 	var faqs []map[string]interface{}
@@ -92,7 +92,7 @@ func (handler *FirestoreHandler) GetAll(collection string) ([]map[string]interfa
 }
 
 // Update updates a Faq
-func (handler *FirestoreHandler) Update(collection string, ID string, data map[string]interface{}) error {
+func (handler *DBHandler) Update(collection string, ID string, data map[string]interface{}) error {
 	_, err := handler.Client.Doc(collection + "/" + ID).Set(handler.Context, data)
 
 	return err
