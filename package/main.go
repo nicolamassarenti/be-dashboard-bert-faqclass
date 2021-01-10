@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/repositories"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/webservice"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure"
-	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
@@ -28,7 +28,7 @@ func main() {
 	kbInteractor.Logger = logger
 	langInteractor.Logger = logger
 
-	webserviceHandler := interfaces.WebserviceHandler{}
+	webserviceHandler := webservice.WebserviceHandler{}
 	webserviceHandler.KnowledgeBaseInteractor = kbInteractor
 	webserviceHandler.LanguagesInteractor = langInteractor
 	webserviceHandler.Logger = logger

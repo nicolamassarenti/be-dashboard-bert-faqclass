@@ -1,29 +1,6 @@
-package interfaces
+package webservice
 
-import (
-	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
-)
-
-func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
-
-	answers := make(map[string][]string)
-	for _, ans := range faq.Answers {
-		answers[ans.Language] = ans.Answers
-	}
-
-	trainingExamples := make(map[string][]string)
-	for _, example := range faq.TrainingExamples {
-		trainingExamples[example.Language] = example.Examples
-	}
-
-
-	return Faq{
-		MainQuestion: faq.MainExample,
-		Answers: answers,
-		Trained: faq.IsTrained,
-		Examples: trainingExamples,
-	}
-}
+import "github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 
 func webserviceKeywordToUsecaseKeyword(keyword Keyword) usecases.Keyword {
 	return usecases.Keyword{
@@ -47,6 +24,27 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 		Answers:          answers,
 		IsTrained:        faq.Trained,
 		TrainingExamples: trainingExamples,
+	}
+}
+
+func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
+
+	answers := make(map[string][]string)
+	for _, ans := range faq.Answers {
+		answers[ans.Language] = ans.Answers
+	}
+
+	trainingExamples := make(map[string][]string)
+	for _, example := range faq.TrainingExamples {
+		trainingExamples[example.Language] = example.Examples
+	}
+
+
+	return Faq{
+		MainQuestion: faq.MainExample,
+		Answers: answers,
+		Trained: faq.IsTrained,
+		Examples: trainingExamples,
 	}
 }
 
