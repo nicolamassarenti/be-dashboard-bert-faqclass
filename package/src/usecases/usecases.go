@@ -40,7 +40,7 @@ type Answer struct {
 	Answers []string
 }
 
-//Logger is the interface that manages the logs
+// Logger is the interface that manages the logs
 type Logger interface {
 	Info(message string)
 	Debug(message string)
@@ -53,15 +53,21 @@ type LanguageRepository interface {
 	GetAllLanguages() ([]Language, error)
 }
 
-//LanguageInteractor is the object that manages the interactions with the languages collection
+// LanguageInteractor is the object that manages the interactions with the languages collection
 type LanguageInteractor struct {
 	LanguageRepository LanguageRepository
 	Logger             Logger
 }
 
-//KnowledgeBaseInteractor is the object that manages the interactions with the KB collection
+// KnowledgeBaseInteractor is the object that manages the interactions with the KB collection
 type KnowledgeBaseInteractor struct {
 	FaqRepository domain.FaqRepository
+	Logger        Logger
+}
+
+// KeywordsInteractor is the object that manages the interactions with the KB collection
+type KeywordsInteractor struct {
+	KeywordRepository domain.KeywordRepository
 	Logger        Logger
 }
 
@@ -172,7 +178,7 @@ func (kbInteractor *KnowledgeBaseInteractor) KnowledgeBase() (faqs []Faq, err er
 	return faqs, nil
 }
 
-// UpdateFaq updates an existing faq
+// Update updates an existing faq
 func (kbInteractor *KnowledgeBaseInteractor) Update(ID string, faq Faq) error {
 	message := "Updating faq with id: %s"
 	kbInteractor.Logger.Info(fmt.Sprintf(message, ID))
@@ -184,6 +190,41 @@ func (kbInteractor *KnowledgeBaseInteractor) Update(ID string, faq Faq) error {
 		message = "Error deleting faq with id %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())
 		kbInteractor.Logger.Error(err.Error())
+		return err
+	}
+	return nil
+}
+
+// Add adds a keyword
+func (keywordsInteractor *KeywordsInteractor) Add(keyword Keyword) error {
+
+	var keywordDomain domain.Keyword
+	keywordDomain.Name = keyword.Name
+
+	domainErr := keywordsInteractor.KeywordRepository.Add(keywordDomain)
+	if domainErr != nil {
+		message := "error adding a new faq"
+		err := fmt.Errorf(message, domainErr.Error())
+		keywordsInteractor.Logger.Error(err.Error())
+		return err
+	}
+	return nil
+}
+
+// Update updates an existing keyword
+func (keywordsInteractor *KeywordsInteractor) Update(ID string, keyword Keyword) error {
+	message := "Updating faq with id: %s"
+	keywordsInteractor.Logger.Info(fmt.Sprintf(message, ID))
+
+	var keywordDomain domain.Keyword
+	keywordDomain.Name = keyword.Name
+	keywordDomain.ID = keyword.ID
+
+	domainErr := keywordsInteractor.KeywordRepository.Update(ID, keywordDomain)
+	if domainErr != nil {
+		message = "Error deleting keyword with id %s"
+		err := fmt.Errorf(message, ID, domainErr.Error())
+		keywordsInteractor.Logger.Error(err.Error())
 		return err
 	}
 	return nil
