@@ -5,12 +5,13 @@ import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/infrastructure/logging"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/repositories"
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/interfaces/webservice"
+	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
+
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 )
 
 func main() {

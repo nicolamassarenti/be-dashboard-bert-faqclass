@@ -174,7 +174,10 @@ func (handler WebserviceHandler) Faq(res http.ResponseWriter, req *http.Request)
 	res.Header().Add("Content-Type", "application/json")
 
 	res.WriteHeader(200)
-	res.Write(body)
+	_, err = res.Write(body)
+	if err != nil {
+		return
+	}
 	handler.Logger.Info("Returning response")
 	return
 }
@@ -211,7 +214,10 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 	res.Header().Add("Content-Type", "application/json")
 
 	res.WriteHeader(200)
-	res.Write(body)
+	_, err = res.Write(body)
+	if err != nil {
+		return
+	}
 	handler.Logger.Info("Returning response")
 	return
 }

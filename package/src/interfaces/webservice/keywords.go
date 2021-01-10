@@ -123,3 +123,87 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 	handler.Logger.Info("Returning response")
 	return
 }
+
+// GetKeywords gets all keywords
+func (handler WebserviceHandler) GetKeywords(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	// Setting headers for CORS
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
+	keywordsUseCase, err := handler.KeywordsInteractor.Keywords()
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var keywords []Keyword
+	for _, keyword := range keywordsUseCase {
+		keywords = append(keywords, Keyword{keyword.ID, keyword.Name})
+	}
+	kb := Keywords{keywords}
+
+	var body []byte
+	if body, err = json.Marshal(kb); err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	res.Header().Add("Content-Type", "application/json")
+
+	res.WriteHeader(200)
+	_, err = res.Write(body)
+	if err != nil {
+		return
+	}
+	handler.Logger.Info("Returning response")
+	return
+}
+
+// GetKeyword gets a specific keyword
+func (handler WebserviceHandler) GetKeyword(res http.ResponseWriter, req *http.Request) {
+	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
+
+	// Setting headers for CORS
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "Authorization")
+	if req.Method == http.MethodOptions {
+		return
+	}
+
+	// Retrieving the ID from the url
+	var id string
+	ok := checkID(handler, res, req)
+	if !ok {
+		return
+	}
+	ids, ok := req.URL.Query()["id"]
+	id = ids[0]
+
+	// Retrieving the Faq
+	keyword, err := handler.KeywordsInteractor.Keyword(id)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Preparing the response
+	var body []byte
+	if body, err = json.Marshal(keyword); err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	res.Header().Add("Content-Type", "application/json")
+
+	res.WriteHeader(200)
+	_, err = res.Write(body)
+	if err != nil {
+		return
+	}
+	handler.Logger.Info("Returning response")
+	return
+}

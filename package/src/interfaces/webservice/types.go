@@ -26,6 +26,8 @@ type KeywordsInteractor interface {
 	Add(usecases.Keyword) error
 	Delete(ID string) error
 	Update(ID string, keyword usecases.Keyword) error
+	Keyword(ID string) (usecases.Keyword, error)
+	Keywords() ([]usecases.Keyword, error)
 }
 
 // KB is the struct that contains the preview of all the KB
@@ -44,6 +46,10 @@ type FaqPreview struct {
 type Keyword struct {
 	ID string
 	Name string
+}
+
+type Keywords struct {
+	Keywords []Keyword `json:"keywords,omitempty"`
 }
 
 // Faq contains the data that define a F.A.Q, in the format required by the UI
