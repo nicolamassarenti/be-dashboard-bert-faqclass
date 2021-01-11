@@ -43,8 +43,8 @@ type FaqPreview struct {
 
 // Keyword is a keyword
 type Keyword struct {
-	ID          string
-	DisplayText string
+	ID          string `json:"id,omitempty"`
+	DisplayText string `json:"keyword,omitempty"`
 }
 
 type Keywords struct {
