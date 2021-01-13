@@ -90,14 +90,6 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 	}
 
 	var err error
-	var updatedKeyword Keyword
-
-	// Parsing the request body
-	err = json.NewDecoder(req.Body).Decode(&updatedKeyword)
-	if err != nil {
-		res.WriteHeader(http.StatusInternalServerError)
-		return
-	}
 
 	// Retrieving the ID from the url
 	var id string
@@ -107,6 +99,12 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 	}
 	ids, ok := req.URL.Query()["id"]
 	id = ids[0]
+
+	var value string
+	values, ok := req.URL.Query()["value"]
+	value = values[0]
+
+	var updatedKeyword = Keyword{ID: id, DisplayText: value}
 
 	// Data transformation
 	usecasesKeyword := webserviceKeywordToUsecaseKeyword(updatedKeyword)
