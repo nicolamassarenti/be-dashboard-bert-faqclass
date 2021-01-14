@@ -16,7 +16,7 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
-	projectID := "PROJECT_ID"
+	projectID := os.Getenv("PROJECT_ID")
 
 	// Handlers, interfaces and implementation
 	dbHandler := db.Handler(projectID)
