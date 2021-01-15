@@ -1,6 +1,6 @@
 package domain
 
-// FaqRepository is the interface
+// FaqRepository defines the interface for the Faqs repository
 type FaqRepository interface {
 	AddFaq(faq Faq) error
 	ChangeTrainingStatus(ID string, newStatus bool) error
@@ -10,7 +10,7 @@ type FaqRepository interface {
 	Update(ID string, faq Faq) error
 }
 
-// KeywordRepository is the interface
+// KeywordRepository defines the interface for the Keywords repository
 type KeywordRepository interface {
 	Add(keyword Keyword) error
 	Delete(ID string) error
@@ -18,23 +18,23 @@ type KeywordRepository interface {
 	Update(ID string, keyword Keyword) error
 }
 
-// Faq contains the data that define a F.A.Q.
+// Faq is a F.A.Q
 type Faq struct {
 	ID               string
 	MainExample      string
-	Answers          []Answer
+	Answers          []Answers
 	IsTrained        bool
-	TrainingExamples []TrainingExample
+	TrainingExamples []TrainingExamples
 }
 
-// TrainingExample contain the training examples of a specific language
-type TrainingExample struct {
+// TrainingExamples defines the examples in a specific language of a Faq
+type TrainingExamples struct {
 	Language string
 	Examples []string
 }
 
-// Answer contains the answer in a language
-type Answer struct {
+// Answers defines the answers in a specific language of a Faq
+type Answers struct {
 	Language   string
 	Answers []string
 }

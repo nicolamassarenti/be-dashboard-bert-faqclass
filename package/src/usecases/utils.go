@@ -21,14 +21,14 @@ func faqFromDomainLayer(faq domain.Faq) Faq {
 // faqToDomainLayer transforms a FAQ from the struct of usecases to the one of the domain layer
 func faqToDomainLayer(faq Faq) domain.Faq {
 
-	answers := make([]domain.Answer, len(faq.Answers))
+	answers := make([]domain.Answers, len(faq.Answers))
 	for i, ans := range faq.Answers {
-		answers[i] = domain.Answer{Language: ans.Language, Answers: ans.Answers}
+		answers[i] = domain.Answers{Language: ans.Language, Answers: ans.Answers}
 	}
 
-	trainingExamples := make([]domain.TrainingExample, len(faq.TrainingExamples))
+	trainingExamples := make([]domain.TrainingExamples, len(faq.TrainingExamples))
 	for i, example := range faq.TrainingExamples {
-		trainingExamples[i] = domain.TrainingExample{Language: example.Language, Examples: example.Examples}
+		trainingExamples[i] = domain.TrainingExamples{Language: example.Language, Examples: example.Examples}
 	}
 	return domain.Faq{
 		MainExample:      faq.MainExample,
