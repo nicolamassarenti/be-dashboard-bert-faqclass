@@ -5,22 +5,23 @@ import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 )
 
-// KnowledgeBase is the implementation that returns all the faq of the knowledge base
+// KnowledgeBase returns a list the knowledge base, so all faqs
 func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
-	var repFaqArray []repositoryFaqWithID
+	var repositoryFaqs []repositoryFaq
 	faqs, err := repo.Handler.GetAll(repo.collection)
 	if err != nil {
 		return nil, err
 	}
 
-	// decoding the map to my type `repositoryFaqWithID`
-	err = mapstructure.Decode(faqs, &repFaqArray)
+	// decoding the map to my type `repositoryFaq`
+	err = mapstructure.Decode(faqs, &repositoryFaqs)
 	if err != nil {
 		return nil, err
 	}
 
+	// Returning data as array of domain faqs
 	var kb []domain.Faq
-	for _, repFaq := range repFaqArray {
+	for _, repFaq := range repositoryFaqs {
 		kb = append(
 			kb,
 			domain.Faq{
@@ -36,7 +37,7 @@ func (repo *KBHandler) KnowledgeBase() ([]domain.Faq, error) {
 	return kb, nil
 }
 
-// Faq is the implementation that returns a specific ID
+// Faq returns the faq that matches `ID`
 func (repo *KBHandler) Faq(ID string) (faq domain.Faq, err error) {
 
 	faqMap, err := repo.Handler.Get(repo.collection, ID)
@@ -48,16 +49,16 @@ func (repo *KBHandler) Faq(ID string) (faq domain.Faq, err error) {
 	return
 }
 
-// ChangeTrainingStatus changes the "isTrained" bool of a Faq
+// ChangeTrainingStatus changes the "isTrained" bool of a faq
 func (repo *KBHandler) ChangeTrainingStatus(ID string, newStatus bool) error {
-	path := "IsTrained"
-	return repo.Handler.ChangeBool(repo.collection, ID, path, newStatus)
+	fieldToChange := "IsTrained"
+	return repo.Handler.ChangeBool(repo.collection, ID, fieldToChange, newStatus)
 }
 
 // AddFaq adds a new faq
 func (repo *KBHandler) AddFaq(faq domain.Faq) error {
-	faqMap := getFaqMapToAdd(faq)
-	return repo.Handler.Add(repo.collection, &faqMap)
+	faqMapStringInterface := domainFaqToMapStringInterface(faq)
+	return repo.Handler.Add(repo.collection, &faqMapStringInterface)
 
 }
 
@@ -66,8 +67,8 @@ func (repo *KBHandler) DeleteFaq(ID string) error {
 	return repo.Handler.Delete(repo.collection, ID)
 }
 
-// AddFaq adds a new faq
+// Update updates a faq
 func (repo *KBHandler) Update(ID string, faq domain.Faq) error {
-	faqMap := getFaqMapToAdd(faq)
-	return repo.Handler.Update(repo.collection, ID, faqMap)
+	faqMapStringInterface := domainFaqToMapStringInterface(faq)
+	return repo.Handler.Update(repo.collection, ID, faqMapStringInterface)
 }

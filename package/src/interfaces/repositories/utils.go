@@ -14,7 +14,7 @@ func mapStringInterfaceToUsecasesLang(langMap map[string]interface{}) usecases.L
 }
 
 // Returns the map[string]interface in the format of the database
-func getFaqMapToAdd(faq domain.Faq) map[string]interface{}{
+func domainFaqToMapStringInterface(faq domain.Faq) map[string]interface{}{
 	return map[string]interface{}{
 		"MainExample":      faq.MainExample,
 		"Answers":          faq.Answers,

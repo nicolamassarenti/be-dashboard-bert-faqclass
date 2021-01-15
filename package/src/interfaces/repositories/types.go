@@ -14,8 +14,8 @@ type DBHandler interface {
 	Update(collection string, ID string, data map[string]interface{}) error
 }
 
-// repositoryFaqWithID is the Data retrieved by the repository
-type repositoryFaqWithID struct {
+// repositoryFaq is the Data retrieved by the repository
+type repositoryFaq struct {
 	ID   string     `json:"ID,omitempty"`
 	Data domain.Faq `json:"data,omitempty"`
 }

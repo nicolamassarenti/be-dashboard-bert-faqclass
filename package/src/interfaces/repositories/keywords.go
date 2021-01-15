@@ -23,7 +23,7 @@ func (repo *KeywordsHandler) Keywords() (keywords []domain.Keyword, err error) {
 		return nil, err
 	}
 
-	// decoding the map to my type `repositoryFaqWithID`
+	// decoding the map to my type `repositoryFaq`
 	err = mapstructure.Decode(keywordsList, &repListArray)
 	if err != nil{
 		return nil, err
