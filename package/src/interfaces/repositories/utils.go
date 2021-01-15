@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Returns the map[string]interface in the format of the database
+// domainFaqToMapStringInterface returns a faq as map[string]interface
 func domainFaqToMapStringInterface(faq domain.Faq) map[string]interface{}{
 	return map[string]interface{}{
 		"MainExample":      faq.MainExample,
@@ -16,7 +16,7 @@ func domainFaqToMapStringInterface(faq domain.Faq) map[string]interface{}{
 	}
 }
 
-// Returns the map[string]interface formatted as requested by the database
+// domainKeywordToMapStringInterface returns a keyword as map[string]interface
 func domainKeywordToMapStringInterface(keyword domain.Keyword) map[string]interface{}{
 	return map[string]interface{}{
 		"DisplayText": keyword.DisplayText,
