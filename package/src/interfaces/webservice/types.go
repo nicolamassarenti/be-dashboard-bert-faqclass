@@ -18,7 +18,7 @@ type KnowledgeBaseInteractor interface {
 
 // LanguagesInteractor is the interactor that links the webservice to the usecases
 type LanguagesInteractor interface {
-	GetAllLanguages() ([]usecases.Language, error)
+	Languages() ([]usecases.Language, error)
 }
 
 // KeywordsInteractor is the interactor that links the webservice to the usecases

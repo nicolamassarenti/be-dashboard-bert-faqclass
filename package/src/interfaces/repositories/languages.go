@@ -2,15 +2,18 @@ package repositories
 
 import "github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 
-// GetAllLanguages returns all the languages
-func (repo *LanguagesHandler) GetAllLanguages() ([]usecases.Language, error) {
+// Languages returns all the languages
+func (repo *LanguagesHandler) Languages() ([]usecases.Language, error) {
 	langsMap, err := repo.Handler.GetAll(repo.collection)
 
-	langs := make([]usecases.Language, len(langsMap))
+	languages := make([]usecases.Language, len(langsMap))
 	for idx, lang := range langsMap{
 		data, _ := lang["faq"].(map[string]interface{})
-		langs[idx] = mapStringInterfaceToUsecasesLang(data)
+		languages[idx] = usecases.Language{
+			IsoName: data["IsoName"].(string),
+			DisplayName: data["DisplayName"].(string),
+		}
 	}
 
-	return langs, err
+	return languages, err
 }

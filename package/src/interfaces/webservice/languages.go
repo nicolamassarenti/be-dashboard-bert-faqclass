@@ -16,7 +16,7 @@ func (handler WebserviceHandler) GetAllLanguages(res http.ResponseWriter, req *h
 		return
 	}
 
-	languages, err := handler.LanguagesInteractor.GetAllLanguages()
+	languages, err := handler.LanguagesInteractor.Languages()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return

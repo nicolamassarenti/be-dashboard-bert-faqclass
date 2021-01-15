@@ -2,16 +2,8 @@ package repositories
 
 import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
-	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 	"time"
 )
-
-func mapStringInterfaceToUsecasesLang(langMap map[string]interface{}) usecases.Language {
-	return usecases.Language{
-		IsoName: langMap["IsoName"].(string),
-		DisplayName: langMap["DisplayName"].(string),
-	}
-}
 
 // Returns the map[string]interface in the format of the database
 func domainFaqToMapStringInterface(faq domain.Faq) map[string]interface{}{

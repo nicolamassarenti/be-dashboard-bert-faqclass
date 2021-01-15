@@ -47,7 +47,7 @@ type Logger interface {
 
 // LanguageRepository is the interface for the language repository
 type LanguageRepository interface {
-	GetAllLanguages() ([]Language, error)
+	Languages() ([]Language, error)
 }
 
 // LanguageInteractor is the object that manages the interactions with the languages collection
