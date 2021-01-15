@@ -8,7 +8,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-// DBHandler is the struct that has the client to firestore
+// DBHandler is the object that defines the db handler
 type DBHandler struct {
 	Client  *firestore.Client
 	Context context.Context
@@ -31,7 +31,7 @@ func Handler(projectID string) *DBHandler {
 	return firestoreHandler
 }
 
-// Add adds a new faq
+// Add adds a new document
 func (handler *DBHandler) Add(collection string, data *map[string]interface{}) error {
 
 	_, _, err := handler.Client.Collection(collection).Add(handler.Context, data)
@@ -39,7 +39,7 @@ func (handler *DBHandler) Add(collection string, data *map[string]interface{}) e
 	return err
 }
 
-// ChangeBool changes the bool value of a document
+// ChangeBool changes a bool value of a document
 func (handler *DBHandler) ChangeBool(collection string, ID, path string, value bool) error {
 	_, err := handler.Client.Doc(collection+"/"+ID).Update(handler.Context, []firestore.Update{
 		{Path: path, Value: value},
@@ -48,14 +48,14 @@ func (handler *DBHandler) ChangeBool(collection string, ID, path string, value b
 	return err
 }
 
-// Delete deletes an Data
+// Delete deletes a document
 func (handler *DBHandler) Delete(collection string, ID string) error {
 	_, err := handler.Client.Doc(collection + "/" + ID).Delete(handler.Context)
 
 	return err
 }
 
-// Get returns a specific faq
+// Get returns a specific document
 func (handler *DBHandler) Get(collection string, ID string) (map[string]interface{}, error) {
 
 	doc, err := handler.Client.Doc(collection + "/" + ID).Get(handler.Context)
@@ -91,7 +91,7 @@ func (handler *DBHandler) GetAll(collection string) ([]map[string]interface{}, e
 	return faqs, nil
 }
 
-// Update updates a Data
+// Update updates a document
 func (handler *DBHandler) Update(collection string, ID string, data map[string]interface{}) error {
 	_, err := handler.Client.Doc(collection + "/" + ID).Set(handler.Context, data)
 
