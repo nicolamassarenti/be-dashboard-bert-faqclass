@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// AddKeyword is the handler function that adds a keyword
+// AddKeyword is the webservice handler that adds a keyword
 func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
@@ -19,22 +19,28 @@ func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.R
 	var err error
 	var newKeyword Keyword
 
-	// Parsing the request body
+	// Parsing request body
+	handler.Logger.Debug("Starting to parse request body")
 	err = json.NewDecoder(req.Body).Decode(&newKeyword)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	handler.Logger.Debug("Request body parsed")
 
-	// Data transformation
+	// Data transformation for presentation
+	handler.Logger.Debug("Starting to transform data for presentation")
 	usecaseKeyword := webserviceKeywordToUsecaseKeyword(newKeyword)
+	handler.Logger.Debug("Data transformation completed")
 
-	// Adding the new Data
+	// Adding keyword
+	handler.Logger.Debug("Starting to add keyword")
 	err = handler.KeywordsInteractor.Add(usecaseKeyword)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	handler.Logger.Debug("Keyword added")
 
 	// Preparing response
 	res.WriteHeader(200)
@@ -42,7 +48,7 @@ func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.R
 	return
 }
 
-// DeleteKeyword is the handler function that deletes a keyword
+// DeleteKeyword is the webservice handler that deletes a keyword
 func (handler WebserviceHandler) DeleteKeyword(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
@@ -57,20 +63,25 @@ func (handler WebserviceHandler) DeleteKeyword(res http.ResponseWriter, req *htt
 	var id string
 	var err error
 
-	// Retrieving the ID
+	// Checking request, verifying if ID is in query params
+	handler.Logger.Debug("Starting to check the ID")
 	id = req.URL.Query().Get("id")
 	ok := checkID(handler, res, req)
 	if !ok {
 		return
 	}
+	handler.Logger.Debug("Request correct, ID inserted as query params")
+
 	handler.Logger.Info("ID: " + id)
 
-	// Deleting the new Data
+	// Deleting keyword
+	handler.Logger.Debug("Starting to delete keyword")
 	err = handler.KeywordsInteractor.Delete(id)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	handler.Logger.Debug("Keyword deleted")
 
 	// Preparing response
 	res.WriteHeader(200)
@@ -78,7 +89,7 @@ func (handler WebserviceHandler) DeleteKeyword(res http.ResponseWriter, req *htt
 	return
 }
 
-// UpdateKeyword updates a keyword
+// UpdateKeyword is the webservice handler that deletes a keyword
 func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
@@ -91,7 +102,8 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 
 	var err error
 
-	// Retrieving the ID from the url
+	// Checking request, verifying if ID is in query params
+	handler.Logger.Debug("Starting to check the ID")
 	var id string
 	ok := checkID(handler, res, req)
 	if !ok {
@@ -99,22 +111,31 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 	}
 	ids, ok := req.URL.Query()["id"]
 	id = ids[0]
+	handler.Logger.Debug("Request correct, ID inserted as query params")
 
+	handler.Logger.Debug("Starting to retrieve value from queryparams")
 	var value string
 	values, ok := req.URL.Query()["value"]
 	value = values[0]
+	handler.Logger.Debug("Param value retrieved")
+
+	handler.Logger.Info("ID: " + id + " value: " + value)
 
 	var updatedKeyword = Keyword{ID: id, DisplayText: value}
 
-	// Data transformation
+	// Data transformation for presentation
+	handler.Logger.Debug("Starting to transform data for presentation")
 	usecasesKeyword := webserviceKeywordToUsecaseKeyword(updatedKeyword)
+	handler.Logger.Debug("Data transformed")
 
-	// Adding the new Data
+	// Updating keyword
+	handler.Logger.Debug("Starting to update keyword")
 	err = handler.KeywordsInteractor.Update(id, usecasesKeyword)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	handler.Logger.Debug("Keyword updated")
 
 	// Preparing response
 	res.WriteHeader(200)
@@ -122,7 +143,7 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 	return
 }
 
-// GetKeywords gets all keywords
+// GetKeywords is the webservice handler that deletes a keyword
 func (handler WebserviceHandler) GetKeywords(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 
@@ -133,23 +154,29 @@ func (handler WebserviceHandler) GetKeywords(res http.ResponseWriter, req *http.
 		return
 	}
 
+	handler.Logger.Debug("Starting to retrieve keywords")
 	keywordsUseCase, err := handler.KeywordsInteractor.Keywords()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	handler.Logger.Debug("Keywords retrieved")
 
+	handler.Logger.Debug("Transforming data for presentation")
 	var keywords []Keyword
 	for _, keyword := range keywordsUseCase {
 		keywords = append(keywords, Keyword{keyword.ID, keyword.DisplayText})
 	}
 	kb := Keywords{keywords}
+	handler.Logger.Debug("Data transformed")
 
+	handler.Logger.Debug("Starting writing body")
 	var body []byte
 	if body, err = json.Marshal(kb); err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	handler.Logger.Debug("Body written")
 
 	res.Header().Add("Content-Type", "application/json")
 
