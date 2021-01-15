@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// KnowledgeBaseInteractor is the interactor that links the webservice to the usecases
+// KnowledgeBaseInteractor defines the interface for the knowledge base
 type KnowledgeBaseInteractor interface {
 	AddFaq(usecases.Faq) error
 	ChangeTrainingStatus(ID string, newStatus bool) error
@@ -16,12 +16,12 @@ type KnowledgeBaseInteractor interface {
 	Update(ID string, faq usecases.Faq) error
 }
 
-// LanguagesInteractor is the interactor that links the webservice to the usecases
+// LanguagesInteractor defines the interface for the languages
 type LanguagesInteractor interface {
 	Languages() ([]usecases.Language, error)
 }
 
-// KeywordsInteractor is the interactor that links the webservice to the usecases
+// KeywordsInteractor defines the interface for the keywords
 type KeywordsInteractor interface {
 	Add(usecases.Keyword) error
 	Delete(ID string) error
@@ -29,29 +29,30 @@ type KeywordsInteractor interface {
 	Keywords() ([]usecases.Keyword, error)
 }
 
-// KB is the struct that contains the preview of all the KB
+// KB defines the object that represents the knowledge base
 type KB struct {
-	KB []FaqPreview `json:"kb,omitempty"`
+	KB []FaqPresentation `json:"kb,omitempty"`
 }
 
-// FaqPreview contains the preview of a faq
-type FaqPreview struct {
+// FaqPresentation defines the faq for presentation
+type FaqPresentation struct {
 	ID           string `json:"id,omitempty"`
 	MainQuestion string `json:"mainQuestion,omitempty"`
 	Trained      bool   `json:"trained"`
 }
 
-// Keyword is a keyword
+// Keyword defines a keyword
 type Keyword struct {
 	ID          string `json:"id,omitempty"`
 	DisplayText string `json:"keyword,omitempty"`
 }
 
+// Keywords defines the keywords
 type Keywords struct {
 	Keywords []Keyword `json:"keywords,omitempty"`
 }
 
-// Faq contains the data that define a F.A.Q, in the format required by the UI
+// Faq defines the faq detail for presentation
 type Faq struct {
 	MainQuestion string              			`json:"mainQuestion"`
 	Answers      map[string][]string            `json:"answers"`
@@ -67,6 +68,7 @@ type WebserviceHandler struct {
 	Logger                  usecases.Logger
 }
 
+// checkID is the function that checks if an id has been passed as query param
 func checkID(handler WebserviceHandler, res http.ResponseWriter, req *http.Request) bool{
 	ids, ok := req.URL.Query()["id"]
 	if !ok || len(ids) != 1 {
@@ -83,7 +85,7 @@ func checkID(handler WebserviceHandler, res http.ResponseWriter, req *http.Reque
 	return ok
 }
 
-// Alive returns 200 OK
+// Alive returns 200 OK is the webservice is alive
 func (handler WebserviceHandler) Alive(res http.ResponseWriter, req *http.Request) {
 	handler.Logger.Info("Received " + req.Method + " request at path: " + req.URL.Path)
 

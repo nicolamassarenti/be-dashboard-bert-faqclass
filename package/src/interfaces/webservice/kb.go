@@ -226,9 +226,9 @@ func (handler WebserviceHandler) KnowledgeBase(res http.ResponseWriter, req *htt
 	handler.Logger.Debug("Knowledge base retrieved")
 
 	handler.Logger.Debug("Starting to transform data for presentation")
-	var faqs []FaqPreview
+	var faqs []FaqPresentation
 	for _, faq := range faqsUseCase {
-		faqs = append(faqs, FaqPreview{faq.ID, faq.MainExample, faq.IsTrained})
+		faqs = append(faqs, FaqPresentation{faq.ID, faq.MainExample, faq.IsTrained})
 	}
 	kb := KB{faqs}
 	handler.Logger.Debug("Data transformed")
