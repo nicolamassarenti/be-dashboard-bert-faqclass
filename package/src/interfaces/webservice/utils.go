@@ -48,7 +48,7 @@ func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
 	}
 }
 
-func languagesToFrontEnd(langs []usecases.Language) map[string]string {
+func usecaseLanguageToMapStringString(langs []usecases.Language) map[string]string {
 	result := make(map[string]string)
 	for _, lang := range langs {
 		result[lang.IsoName] = lang.DisplayName
