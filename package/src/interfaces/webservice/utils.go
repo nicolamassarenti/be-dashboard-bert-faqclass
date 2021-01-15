@@ -2,12 +2,14 @@ package webservice
 
 import "github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/usecases"
 
+// webserviceKeywordToUsecaseKeyword transform a keyword from webservice data format to usecase data format
 func webserviceKeywordToUsecaseKeyword(keyword Keyword) usecases.Keyword {
 	return usecases.Keyword{
 		DisplayText: keyword.DisplayText,
 	}
 }
 
+// webserviceFaqToUsecaseFaq transform a faq from webservice data format to usecase data format
 func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 	var answers []usecases.Answer
 	for k, v := range faq.Answers {
@@ -27,6 +29,7 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 	}
 }
 
+// usecaseFaqToWebserviceFaq transform a faq from usecase data format to webservice data format
 func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
 
 	answers := make(map[string][]string)
@@ -48,6 +51,7 @@ func usecaseFaqToWebserviceFaq(faq usecases.Faq) Faq {
 	}
 }
 
+// usecaseLanguageToMapStringString transform a language from usecase data format to map[string]string
 func usecaseLanguageToMapStringString(langs []usecases.Language) map[string]string {
 	result := make(map[string]string)
 	for _, lang := range langs {
