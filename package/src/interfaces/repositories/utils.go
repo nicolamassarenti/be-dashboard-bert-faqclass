@@ -25,9 +25,9 @@ func domainFaqToMapStringInterface(faq domain.Faq) map[string]interface{}{
 }
 
 // Returns the map[string]interface formatted as requested by the database
-func getKeywordMapToAdd(keyword domain.Keyword) map[string]interface{}{
+func domainKeywordToMapStringInterface(keyword domain.Keyword) map[string]interface{}{
 	return map[string]interface{}{
 		"DisplayText": keyword.DisplayText,
-		"UpdateDate": 		time.Now().Format(time.RFC3339),
+		"UpdateDate":  time.Now().Format(time.RFC3339),
 	}
 }

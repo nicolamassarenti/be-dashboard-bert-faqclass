@@ -20,8 +20,8 @@ type repositoryFaq struct {
 	Data domain.Faq `json:"data,omitempty"`
 }
 
-// repositoryKeywordWithID is the Data retrieved by the repository
-type repositoryKeywordWithID struct {
+// repositoryKeyword is the Data retrieved by the repository
+type repositoryKeyword struct {
 	ID   string         `json:"ID,omitempty"`
 	Data domain.Keyword `json:"Data,omitempty"`
 }
