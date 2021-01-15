@@ -1,6 +1,6 @@
 package interfaces
 
-// LoggerInterface defines the methods to be implemented by the logger
+// LoggerInterface defines the interface for logger
 type LoggerInterface interface {
 	Fatal(message string)
 	Error(message string)
