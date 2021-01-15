@@ -36,7 +36,7 @@ func (handler WebserviceHandler) AddKeyword(res http.ResponseWriter, req *http.R
 		return
 	}
 
-	// Preparing the response
+	// Preparing response
 	res.WriteHeader(200)
 	handler.Logger.Info("Returning response")
 	return
@@ -72,7 +72,7 @@ func (handler WebserviceHandler) DeleteKeyword(res http.ResponseWriter, req *htt
 		return
 	}
 
-	// Preparing the response
+	// Preparing response
 	res.WriteHeader(200)
 	handler.Logger.Info("Returning response")
 	return
@@ -116,7 +116,7 @@ func (handler WebserviceHandler) UpdateKeyword(res http.ResponseWriter, req *htt
 		return
 	}
 
-	// Preparing the response
+	// Preparing response
 	res.WriteHeader(200)
 	handler.Logger.Info("Returning response")
 	return

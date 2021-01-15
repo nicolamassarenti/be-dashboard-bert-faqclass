@@ -77,6 +77,7 @@ func checkID(handler WebserviceHandler, res http.ResponseWriter, req *http.Reque
 		} else {
 			handler.Logger.Info("More than one ID in query params. Returning BadRequest")
 		}
+		handler.Logger.Info("Returning response")
 		res.WriteHeader(http.StatusBadRequest)
 	}
 	return ok
