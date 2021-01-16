@@ -16,9 +16,9 @@ func webserviceFaqToUsecaseFaq(faq Faq) usecases.Faq {
 		answers = append(answers, usecases.Answer{Language: k, Answers: v})
 	}
 
-	var trainingExamples []usecases.TrainingExample
+	var trainingExamples []usecases.TrainingExamples
 	for k, v := range faq.Examples {
-		trainingExamples = append(trainingExamples, usecases.TrainingExample{Language: k, Examples: v})
+		trainingExamples = append(trainingExamples, usecases.TrainingExamples{Language: k, Examples: v})
 	}
 
 	return usecases.Faq{

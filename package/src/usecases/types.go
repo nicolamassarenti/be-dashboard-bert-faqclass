@@ -4,29 +4,29 @@ import (
 	"github.com/nicolamassarenti/be-dashboard-bert-faqclass/src/domain"
 )
 
-// Language defines the language
+// Language defines a language
 type Language struct {
 	IsoName     string
 	DisplayName string
 }
 
-// Faq contains the data that define a F.A.Q.
+// Faq defines a faq
 type Faq struct {
 	ID               string
 	MainExample      string
 	Answers          []Answer
 	IsTrained        bool
-	TrainingExamples []TrainingExample
+	TrainingExamples []TrainingExamples
 }
 
-// Keyword is a keyword
+// Keyword defines a keyword
 type Keyword struct {
 	ID          string
 	DisplayText string
 }
 
-// TrainingExample contain the training examples of a specific language
-type TrainingExample struct {
+// TrainingExamples defines a set of training example
+type TrainingExamples struct {
 	Language string
 	Examples []string
 }
@@ -37,7 +37,7 @@ type Answer struct {
 	Answers []string
 }
 
-// Logger is the interface that manages the logs
+// Logger defines the interface for the logger
 type Logger interface {
 	Info(message string)
 	Debug(message string)
@@ -45,7 +45,7 @@ type Logger interface {
 	Fatal(message string)
 }
 
-// LanguageRepository is the interface for the language repository
+// LanguageRepository defines interface for the language repository
 type LanguageRepository interface {
 	Languages() ([]Language, error)
 }

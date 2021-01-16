@@ -11,9 +11,9 @@ func domainFaqToUsecaseFaq(faq domain.Faq) Faq {
 		answers[i] = Answer{ans.Language, ans.Answers}
 	}
 
-	trainingExamples := make([]TrainingExample, len(faq.TrainingExamples))
+	trainingExamples := make([]TrainingExamples, len(faq.TrainingExamples))
 	for i, example := range faq.TrainingExamples {
-		trainingExamples[i] = TrainingExample{example.Language, example.Examples}
+		trainingExamples[i] = TrainingExamples{example.Language, example.Examples}
 	}
 	return Faq{faq.ID, faq.MainExample, answers, faq.IsTrained, trainingExamples}
 }
