@@ -2,7 +2,7 @@ package usecases
 
 import "fmt"
 
-// GetAllLanguages returns all the languages
+// Languages returns all the languages
 func (langInteractor *LanguageInteractor) Languages() (langs []Language, err error) {
 	langInteractor.Logger.Info("Retrieving the languages")
 
