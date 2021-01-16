@@ -8,7 +8,7 @@ import (
 
 // Add adds a keyword
 func (interactor *KeywordsInteractor) Add(keyword Keyword) error {
-
+	interactor.Logger.Debug("Starting to add keyword")
 	var keywordDomain domain.Keyword
 	keywordDomain.DisplayText = keyword.DisplayText
 
@@ -19,13 +19,13 @@ func (interactor *KeywordsInteractor) Add(keyword Keyword) error {
 		interactor.Logger.Error(err.Error())
 		return err
 	}
+	interactor.Logger.Debug("Keyword added")
 	return nil
 }
 
-// Update updates an existing keyword
+// Update updates a keyword
 func (interactor *KeywordsInteractor) Update(ID string, keyword Keyword) error {
-	message := "Updating faq with id: %s"
-	interactor.Logger.Info(fmt.Sprintf(message, ID))
+	interactor.Logger.Debug("Starting to update keyword")
 
 	var keywordDomain domain.Keyword
 	keywordDomain.DisplayText = keyword.DisplayText
@@ -33,38 +33,37 @@ func (interactor *KeywordsInteractor) Update(ID string, keyword Keyword) error {
 
 	domainErr := interactor.Repository.Update(ID, keywordDomain)
 	if domainErr != nil {
-		message = "Error deleting keyword with id %s"
+		message := "Error deleting keyword with id %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())
 		interactor.Logger.Error(err.Error())
 		return err
 	}
+	interactor.Logger.Debug("Keyword updated")
 	return nil
 }
 
-// Delete deletes an existing keyword
+// Delete deletes a keyword
 func (interactor *KeywordsInteractor) Delete(ID string) error {
-	message := "Deleting faq with id: %s"
-	interactor.Logger.Info(fmt.Sprintf(message, ID))
+	interactor.Logger.Debug("Starting to delete keyword")
 
 	domainErr := interactor.Repository.Delete(ID)
 	if domainErr != nil {
-		message = "Error deleting faq with id %s"
+		message := "Error deleting faq with id %s"
 		err := fmt.Errorf(message, ID, domainErr.Error())
 		interactor.Logger.Error(err.Error())
 		return err
 	}
+	interactor.Logger.Debug("Keyword deleted")
 	return nil
 }
 
-// KnowledgeBase returns all the knowledge base, all the faqs
+// Keywords returns all the keywords
 func (interactor *KeywordsInteractor) Keywords() (keywords []Keyword, err error) {
-	var message string
-
-	interactor.Logger.Info("Retrieving the KB")
+	interactor.Logger.Debug("Starting to retrieve KB")
 	allKeywords, domainErr := interactor.Repository.Keywords()
 
 	if domainErr != nil {
-		message = "Error retrieving the KB - %s"
+		message := "Error retrieving the KB - %s"
 		err = fmt.Errorf(message, domainErr.Error())
 		interactor.Logger.Error(err.Error())
 		return nil, domainErr
