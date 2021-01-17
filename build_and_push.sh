@@ -11,6 +11,8 @@ REMOTE_IMAGE=${SOURCE_IMAGE}
 
 HOSTNAME=eu.gcr.io
 
+ENV PROJECT_ID=${PROJECT_ID}
+
 # Building docker image
 docker build --file ./container/Dockerfile --tag ${SOURCE_IMAGE} .
 
