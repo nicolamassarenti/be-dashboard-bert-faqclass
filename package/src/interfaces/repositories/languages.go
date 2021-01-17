@@ -8,7 +8,7 @@ func (repo *LanguagesHandler) Languages() ([]usecases.Language, error) {
 
 	languages := make([]usecases.Language, len(langsMap))
 	for idx, lang := range langsMap{
-		data, _ := lang["faq"].(map[string]interface{})
+		data, _ := lang["data"].(map[string]interface{})
 		languages[idx] = usecases.Language{
 			IsoName: data["IsoName"].(string),
 			DisplayName: data["DisplayName"].(string),
