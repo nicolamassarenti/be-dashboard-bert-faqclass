@@ -16,7 +16,7 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
-	projectID := os.Getenv("PROJECT_ID")
+	projectID := os.Getenv("GCP_PROJECT")
 
 	// Handlers, interfaces and implementation
 	dbHandler := db.Handler(projectID)
