@@ -23,4 +23,5 @@ gcloud run deploy \
     --image ${REMOTE_IMAGE} \
     --service-account ${SERVICE_ACCOUNT} \
     --memory 200M \
-    --port 8081
+    --port 8081 \
+    --set-env-vars "PROJECT_ID="${PROJECT_ID}
