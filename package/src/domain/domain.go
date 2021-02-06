@@ -27,13 +27,13 @@ type Faq struct {
 	TrainingExamples []TrainingExamples
 }
 
-// TrainingExamples defines the examples in a specific language of a Faq
+// TrainingExamples defines Faq examples in a specific language
 type TrainingExamples struct {
 	Language string
 	Examples []string
 }
 
-// Answers defines the answers in a specific language of a Faq
+// Answers defines Faq answers in a specific language
 type Answers struct {
 	Language   string
 	Answers []string
