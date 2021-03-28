@@ -5,6 +5,8 @@
 
 Welcome in the repository of the back-end dashboard for the _bert-faqclass_ project! This repository contains the code to set-up a dashboard backend to control the knowledge base of your AI chatbot.
 
+_Note_: check out the use case description in this [Medium article](https://nicola-massarenti.medium.com/end-to-end-machine-learning-bert-faqclass-81fd07d24058).
+
 ## About the design pattern
 
 The code relies on the Clean Architecture, described by [Uncle Bob](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html), based on the _Dependency Rule_. Citing Uncle Bob'b blog:
